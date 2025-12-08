@@ -130,12 +130,12 @@ export default function UserDashboard() {
             {/* 页面标题 */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">仪表盘</h1>
-                    <p className="text-slate-400 mt-1">查看您的使用情况和订阅信息</p>
+                    <h1 className="text-2xl font-bold text-slate-900">仪表盘</h1>
+                    <p className="text-slate-500 mt-1">查看您的使用情况和订阅信息</p>
                 </div>
                 <button
                     onClick={() => refetchProfile()}
-                    className="p-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                    className="p-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition shadow-sm"
                     title="刷新数据"
                 >
                     <RefreshCw className="w-4 h-4" />
@@ -153,17 +153,17 @@ export default function UserDashboard() {
                         <span className="text-xs text-blue-400">{usedPercent.toFixed(1)}%</span>
                     </div>
                     <div className="space-y-2">
-                        <p className="text-sm text-slate-400">已用流量</p>
-                        <p className="text-2xl font-bold text-white">
+                        <p className="text-sm text-slate-500">已用流量</p>
+                        <p className="text-2xl font-bold text-slate-900">
                             {loadingProfile ? '...' : formatTraffic(usedTraffic)}
                         </p>
-                        <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
+                        <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
                             <div
                                 className="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-full transition-all"
                                 style={{ width: `${usedPercent}%` }}
                             />
                         </div>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-slate-400">
                             总流量: {formatTraffic(totalTraffic)}
                         </p>
                     </div>
@@ -177,11 +177,11 @@ export default function UserDashboard() {
                         </div>
                     </div>
                     <div className="space-y-2">
-                        <p className="text-sm text-slate-400">套餐状态</p>
+                        <p className="text-sm text-slate-500">套餐状态</p>
                         <p className={`text-2xl font-bold ${expiredInfo.color}`}>
                             {loadingProfile ? '...' : expiredInfo.text}
                         </p>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-slate-400">
                             {profile?.expired_at
                                 ? new Date(profile.expired_at).toLocaleDateString('zh-CN')
                                 : '无到期时间'
@@ -198,13 +198,13 @@ export default function UserDashboard() {
                         </div>
                     </div>
                     <div className="space-y-2">
-                        <p className="text-sm text-slate-400">账户余额</p>
-                        <p className="text-2xl font-bold text-white">
+                        <p className="text-sm text-slate-500">账户余额</p>
+                        <p className="text-2xl font-bold text-slate-900">
                             ¥{loadingProfile ? '...' : (profile?.balance || 0).toFixed(2)}
                         </p>
                         <Link
                             to="/dashboard/plans"
-                            className="inline-flex items-center gap-1 text-xs text-green-400 hover:text-green-300 transition"
+                            className="inline-flex items-center gap-1 text-xs text-green-600 hover:text-green-500 transition"
                         >
                             充值购买 <ChevronRight className="w-3 h-3" />
                         </Link>
@@ -219,11 +219,11 @@ export default function UserDashboard() {
                         </div>
                     </div>
                     <div className="space-y-2">
-                        <p className="text-sm text-slate-400">可用节点</p>
-                        <p className="text-2xl font-bold text-white">
+                        <p className="text-sm text-slate-500">可用节点</p>
+                        <p className="text-2xl font-bold text-slate-900">
                             {loadingNodes ? '...' : `${onlineNodes.length} / ${nodes.length}`}
                         </p>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-slate-400">
                             在线节点数
                         </p>
                     </div>
@@ -231,12 +231,12 @@ export default function UserDashboard() {
             </div>
 
             {/* 订阅链接 */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-white">订阅链接</h2>
+            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h2 className="text-lg font-semibold text-slate-900">订阅链接</h2>
                     <button
                         onClick={() => setShowQrModal(true)}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-sm rounded-lg transition"
+                        className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm rounded-lg transition"
                     >
                         <QrCode className="w-4 h-4" />
                         <span>二维码</span>
@@ -247,13 +247,13 @@ export default function UserDashboard() {
                     {subscribeProtocols.map((protocol) => (
                         <div
                             key={protocol.id}
-                            className="bg-slate-800/50 border border-slate-700 rounded-lg p-4 hover:border-primary/50 transition"
+                            className="bg-slate-50 border border-slate-200 rounded-lg p-4 hover:border-primary/50 transition duration-200"
                         >
                             <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-2">
                                     <span className="text-xl">{protocol.icon}</span>
                                     <div>
-                                        <p className="font-medium text-white">{protocol.name}</p>
+                                        <p className="font-medium text-slate-900">{protocol.name}</p>
                                         <p className="text-xs text-slate-500">{protocol.desc}</p>
                                     </div>
                                 </div>
@@ -261,11 +261,11 @@ export default function UserDashboard() {
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => handleCopy(protocol.id)}
-                                    className="flex-1 flex items-center justify-center gap-2 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-lg transition"
+                                    className="flex-1 flex items-center justify-center gap-2 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 text-sm rounded-lg transition shadow-sm"
                                 >
                                     {copiedId === protocol.id ? (
                                         <>
-                                            <Check className="w-4 h-4 text-green-400" />
+                                            <Check className="w-4 h-4 text-green-500" />
                                             <span>已复制</span>
                                         </>
                                     ) : (
@@ -279,7 +279,7 @@ export default function UserDashboard() {
                                     href={getSubscribeUrl(protocol.id)}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition"
+                                    className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition shadow-sm"
                                     title="打开链接"
                                 >
                                     <ExternalLink className="w-4 h-4" />
@@ -291,15 +291,15 @@ export default function UserDashboard() {
             </div>
 
             {/* 节点列表预览 */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-white">节点状态</h2>
-                    <span className="text-sm text-slate-400">
+            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h2 className="text-lg font-semibold text-slate-900">节点状态</h2>
+                    <span className="text-sm text-slate-500">
                         {onlineNodes.length} 个节点在线
                     </span>
                 </div>
 
-                <div className="divide-y divide-slate-800">
+                <div className="divide-y divide-slate-100">
                     {loadingNodes ? (
                         <div className="px-6 py-8 text-center text-slate-500">加载中...</div>
                     ) : nodes.length === 0 ? (
@@ -308,19 +308,19 @@ export default function UserDashboard() {
                         nodes.slice(0, 5).map((node) => (
                             <div
                                 key={node.id}
-                                className="px-6 py-4 flex items-center justify-between hover:bg-slate-800/50 transition"
+                                className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition"
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className={`w-2 h-2 rounded-full ${node.status === 1 ? 'bg-green-400' : 'bg-red-400'
+                                    <div className={`w-2 h-2 rounded-full ${node.status === 1 ? 'bg-green-500' : 'bg-red-500'
                                         }`} />
                                     <div>
-                                        <p className="font-medium text-white">{node.name}</p>
+                                        <p className="font-medium text-slate-900">{node.name}</p>
                                         <p className="text-sm text-slate-500">{node.address}</p>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-sm text-slate-400">{node.protocol}</p>
-                                    <p className="text-xs text-slate-500">
+                                    <p className="text-sm text-slate-600">{node.protocol}</p>
+                                    <p className="text-xs text-slate-400">
                                         倍率: {node.traffic_rate}x
                                     </p>
                                 </div>
@@ -330,8 +330,8 @@ export default function UserDashboard() {
                 </div>
 
                 {nodes.length > 5 && (
-                    <div className="px-6 py-3 border-t border-slate-800 text-center">
-                        <span className="text-sm text-slate-400">
+                    <div className="px-6 py-3 border-t border-slate-100 text-center">
+                        <span className="text-sm text-slate-500">
                             还有 {nodes.length - 5} 个节点，请使用客户端查看
                         </span>
                     </div>
@@ -341,12 +341,12 @@ export default function UserDashboard() {
             {/* 二维码弹窗 */}
             {showQrModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-md">
-                        <div className="flex items-center justify-between p-6 border-b border-slate-800">
-                            <h3 className="text-lg font-semibold text-white">订阅二维码</h3>
+                    <div className="bg-white border border-slate-200 rounded-xl w-full max-w-md shadow-xl">
+                        <div className="flex items-center justify-between p-6 border-b border-slate-100">
+                            <h3 className="text-lg font-semibold text-slate-900">订阅二维码</h3>
                             <button
                                 onClick={() => setShowQrModal(false)}
-                                className="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400 hover:text-white"
+                                className="p-2 hover:bg-slate-100 rounded-lg transition text-slate-400 hover:text-slate-600"
                             >
                                 ✕
                             </button>
@@ -359,8 +359,8 @@ export default function UserDashboard() {
                                         key={protocol.id}
                                         onClick={() => setSelectedProtocol(protocol.id)}
                                         className={`px-3 py-1.5 text-sm rounded-lg transition ${selectedProtocol === protocol.id
-                                            ? 'bg-primary text-white'
-                                            : 'bg-slate-800 text-slate-400 hover:text-white'
+                                            ? 'bg-primary text-white shadow-md shadow-primary/25'
+                                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                             }`}
                                     >
                                         {protocol.name}
@@ -381,9 +381,9 @@ export default function UserDashboard() {
                             </div>
 
                             {/* 订阅链接 */}
-                            <div className="bg-slate-800 rounded-lg p-3">
-                                <p className="text-xs text-slate-400 mb-2">订阅链接:</p>
-                                <p className="text-xs text-slate-300 break-all font-mono">
+                            <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                                <p className="text-xs text-slate-500 mb-2">订阅链接:</p>
+                                <p className="text-xs text-slate-600 break-all font-mono">
                                     {getSubscribeUrl(selectedProtocol)}
                                 </p>
                             </div>

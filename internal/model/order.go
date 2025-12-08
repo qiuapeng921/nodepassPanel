@@ -6,8 +6,9 @@ import "time"
 type Order struct {
 	Base
 	OrderNo   string  `gorm:"type:varchar(64);uniqueIndex;not null" json:"order_no"` // 订单号
+	Type      string  `gorm:"type:varchar(20);default:'plan'" json:"type"`           // 订单类型: plan, recharge
 	UserID    uint    `gorm:"index;not null" json:"user_id"`                         // 用户ID
-	PlanID    uint    `gorm:"index" json:"plan_id"`                                  // 套餐ID (可选)
+	PlanID    *uint   `gorm:"index" json:"plan_id"`                                  // 套餐ID (可选)
 	CouponID  *uint   `gorm:"index" json:"coupon_id"`                                // 优惠券ID (可选)
 	TradeNo   string  `gorm:"type:varchar(128)" json:"trade_no"`                     // 第三方支付单号
 	PayMethod string  `gorm:"type:varchar(32)" json:"pay_method"`                    // 支付方式: stripe, alipay, wechat, manual
@@ -27,7 +28,7 @@ type Order struct {
 	Remark string `gorm:"type:text" json:"remark"`
 
 	// 关联
-	User Plan `gorm:"foreignKey:UserID" json:"-"`
+	User User `gorm:"foreignKey:UserID" json:"-"`
 	Plan Plan `gorm:"foreignKey:PlanID" json:"-"`
 }
 
@@ -42,4 +43,7 @@ const (
 	OrderStatusPaid      = 1 // 已支付
 	OrderStatusCancelled = 2 // 已取消
 	OrderStatusRefunded  = 3 // 已退款
+
+	OrderTypePlan     = "plan"     // 套餐订单
+	OrderTypeRecharge = "recharge" // 充值订单
 )

@@ -23,13 +23,13 @@ function StatCard({
     icon: React.ComponentType<{ className?: string }>;
 }) {
     return (
-        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 hover:border-slate-700 transition">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 hover:border-slate-300 transition shadow-sm">
             <div className="flex items-start justify-between">
                 <div>
-                    <p className="text-sm text-slate-400">{title}</p>
-                    <p className="text-2xl font-bold text-white mt-1">{value}</p>
+                    <p className="text-sm text-slate-500">{title}</p>
+                    <p className="text-2xl font-bold text-slate-900 mt-1">{value}</p>
                     {change && (
-                        <div className={`flex items-center gap-1 mt-2 text-sm ${changeType === 'up' ? 'text-green-400' : 'text-red-400'
+                        <div className={`flex items-center gap-1 mt-2 text-sm ${changeType === 'up' ? 'text-green-500' : 'text-red-500'
                             }`}>
                             {changeType === 'up' ? (
                                 <TrendingUp className="w-4 h-4" />
@@ -54,8 +54,8 @@ export default function AdminDashboard() {
         <div className="space-y-6">
             {/* 页面标题 */}
             <div>
-                <h1 className="text-2xl font-bold text-white">仪表盘</h1>
-                <p className="text-slate-400 mt-1">欢迎回来，查看系统概览</p>
+                <h1 className="text-2xl font-bold text-slate-900">仪表盘</h1>
+                <p className="text-slate-500 mt-1">欢迎回来，查看系统概览</p>
             </div>
 
             {/* 统计卡片 */}
@@ -93,32 +93,32 @@ export default function AdminDashboard() {
             {/* 图表区域 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* 流量统计 */}
-                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-white">流量统计</h3>
-                        <select className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-300">
+                        <h3 className="text-lg font-semibold text-slate-900">流量统计</h3>
+                        <select className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-sm text-slate-600 focus:outline-none focus:border-primary">
                             <option>最近 7 天</option>
                             <option>最近 30 天</option>
                             <option>最近 90 天</option>
                         </select>
                     </div>
-                    <div className="h-64 flex items-center justify-center text-slate-500">
+                    <div className="h-64 flex items-center justify-center text-slate-400">
                         <Activity className="w-8 h-8 mr-2" />
                         <span>图表加载中...</span>
                     </div>
                 </div>
 
                 {/* 订单趋势 */}
-                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-white">订单趋势</h3>
-                        <select className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-300">
+                        <h3 className="text-lg font-semibold text-slate-900">订单趋势</h3>
+                        <select className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-sm text-slate-600 focus:outline-none focus:border-primary">
                             <option>最近 7 天</option>
                             <option>最近 30 天</option>
                             <option>最近 90 天</option>
                         </select>
                     </div>
-                    <div className="h-64 flex items-center justify-center text-slate-500">
+                    <div className="h-64 flex items-center justify-center text-slate-400">
                         <Activity className="w-8 h-8 mr-2" />
                         <span>图表加载中...</span>
                     </div>
@@ -126,8 +126,8 @@ export default function AdminDashboard() {
             </div>
 
             {/* 最近活动 */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">最近活动</h3>
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">最近活动</h3>
                 <div className="space-y-4">
                     {[
                         { action: '新用户注册', user: 'user@example.com', time: '2 分钟前' },
@@ -135,12 +135,12 @@ export default function AdminDashboard() {
                         { action: '节点状态变更', user: '香港节点 01', time: '15 分钟前' },
                         { action: '套餐购买', user: 'vip@example.com', time: '30 分钟前' },
                     ].map((item, index) => (
-                        <div key={index} className="flex items-center justify-between py-3 border-b border-slate-800 last:border-0">
+                        <div key={index} className="flex items-center justify-between py-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition px-2 rounded-lg">
                             <div>
-                                <p className="text-sm font-medium text-white">{item.action}</p>
-                                <p className="text-xs text-slate-400">{item.user}</p>
+                                <p className="text-sm font-medium text-slate-900">{item.action}</p>
+                                <p className="text-xs text-slate-500">{item.user}</p>
                             </div>
-                            <span className="text-xs text-slate-500">{item.time}</span>
+                            <span className="text-xs text-slate-400">{item.time}</span>
                         </div>
                     ))}
                 </div>

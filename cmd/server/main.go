@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"net/http"
 	"nodepassPanel/internal/config"
 	"nodepassPanel/internal/global"
 	"nodepassPanel/internal/handler"
@@ -11,6 +13,9 @@ import (
 	"nodepassPanel/internal/task"
 	"nodepassPanel/pkg/logger"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"go.uber.org/zap"
 )
@@ -79,10 +84,10 @@ func main() {
 		}
 	}
 
-	// Init Websocket Hub
+	// 初始化 Websocket Hub
 	handler.InitGlobalHub()
 
-	// Start Background Tasks (Monitor)
+	// 启动后台任务
 	task.StartTasks()
 	defer task.StopTasks()
 
@@ -90,8 +95,30 @@ func main() {
 	r := router.InitRouter()
 
 	// 5. 启动服务
-	logger.Log.Info("Server is starting", zap.String("port", config.App.Server.Port))
-	if err := r.Run(config.App.Server.Port); err != nil {
-		logger.Log.Fatal("Server start failed", zap.Error(err))
+	srv := &http.Server{
+		Addr:    config.App.Server.Port,
+		Handler: r,
 	}
+
+	go func() {
+		logger.Log.Info("Server is starting", zap.String("port", config.App.Server.Port))
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logger.Log.Fatal("Server start failed", zap.Error(err))
+		}
+	}()
+
+	// 优雅退出 (Graceful Shutdown)
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	logger.Log.Info("Shutting down server...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := srv.Shutdown(ctx); err != nil {
+		logger.Log.Fatal("Server forced to shutdown", zap.Error(err))
+	}
+
+	logger.Log.Info("Server exiting")
 }

@@ -19,4 +19,4 @@ coverage.txt
 config/config.yaml
 # OS
 .DS_Store
-Thumbs.db
+*.db

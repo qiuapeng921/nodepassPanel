@@ -71,7 +71,10 @@ func (h *OrderHandler) List(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, orders)
+	response.Success(c, gin.H{
+		"list":  orders,
+		"total": len(orders),
+	})
 }
 
 // Get 获取订单详情
@@ -133,7 +136,7 @@ func (h *OrderHandler) Cancel(c *gin.Context) {
 // @Param page query int false "页码"
 // @Param page_size query int false "每页数量"
 // @Param status query int false "订单状态"
-// @Param user_id query int false "用户ID"
+// @Param keyword query string false "搜索关键字(订单号/邮箱)"
 // @Success 200 {object} response.Response
 // @Router /api/v1/admin/orders [get]
 func (h *OrderHandler) AdminList(c *gin.Context) {

@@ -288,148 +288,149 @@ export default function UsersPage() {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <input
                             type="text"
-                            placeholder="搜索邮箱..."
+                            placeholder="搜索用户名、邮箱..."
                             value={searchInput}
                             onChange={(e) => setSearchInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                            className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-primary"
+                            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-primary"
                         />
                     </div>
-                    <button
-                        onClick={handleSearch}
-                        className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
-                    >
-                        搜索
-                    </button>
-                    <button
-                        onClick={() => refetch()}
-                        className="p-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
-                        title="刷新"
-                    >
-                        <RefreshCw className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={handleSearch}
+                            className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-lg transition border border-slate-200"
+                        >
+                            搜索
+                        </button>
+                        <button
+                            onClick={() => refetch()}
+                            className="p-2 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-lg transition border border-slate-200"
+                            title="刷新"
+                        >
+                            <RefreshCw className="w-4 h-4" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* 批量操作工具栏 */}
                 {selectedIds.length > 0 && (
-                    <div className="flex items-center gap-2 p-2 bg-slate-800 rounded-lg animate-fade-in px-4">
-                        <span className="text-sm text-slate-300 mr-2">
-                            已选 {selectedIds.length} 项
+                    <div className="flex items-center gap-4 p-4 bg-primary/5 border border-primary/10 rounded-xl animate-fade-in">
+                        <span className="text-sm text-slate-600">
+                            已选择 <span className="font-bold text-primary">{selectedIds.length}</span> 个用户
                         </span>
-                        <div className="h-4 w-px bg-slate-700 mx-2" />
+                        <div className="h-4 w-px bg-slate-200" />
                         <button
                             onClick={() => batchUnbanMutation.mutate(selectedIds)}
-                            className="p-2 hover:bg-slate-700 rounded transition text-green-400"
+                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-green-600 hover:bg-green-50 rounded-lg transition"
                             title="批量启用"
                         >
                             <CheckCircle className="w-4 h-4" />
+                            启用
                         </button>
                         <button
                             onClick={() => batchBanMutation.mutate(selectedIds)}
-                            className="p-2 hover:bg-slate-700 rounded transition text-orange-400"
+                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-orange-600 hover:bg-orange-50 rounded-lg transition"
                             title="批量禁用"
                         >
                             <Ban className="w-4 h-4" />
+                            禁用
                         </button>
                         <button
                             onClick={() => setShowBatchChargeModal(true)}
-                            className="p-2 hover:bg-slate-700 rounded transition text-blue-400"
+                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition"
                             title="批量充值"
                         >
                             <DollarSign className="w-4 h-4" />
+                            充值
                         </button>
                         <button
                             onClick={() => batchResetTrafficMutation.mutate(selectedIds)}
-                            className="p-2 hover:bg-slate-700 rounded transition text-purple-400"
+                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-purple-600 hover:bg-purple-50 rounded-lg transition"
                             title="批量重置流量"
                         >
                             <RotateCcw className="w-4 h-4" />
+                            重置流量
                         </button>
-                        <div className="h-4 w-px bg-slate-700 mx-2" />
                         <button
                             onClick={handleBatchDelete}
-                            className="p-2 hover:bg-red-900/50 rounded transition text-red-400"
+                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition"
                             title="批量删除"
                         >
                             <Trash2 className="w-4 h-4" />
+                            删除
                         </button>
                     </div>
                 )}
             </div>
 
             {/* 用户列表 */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
+            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                 <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="border-b border-slate-800">
+                    <table className="w-full text-left text-sm">
+                        <thead className="bg-slate-50 text-slate-500 font-medium border-b border-slate-200">
+                            <tr>
                                 <th className="px-6 py-4 w-12">
                                     <input
                                         type="checkbox"
                                         checked={users.length > 0 && selectedIds.length === users.length}
                                         onChange={handleSelectAll}
-                                        className="w-4 h-4 rounded border-slate-700 bg-slate-900 text-primary focus:ring-offset-slate-900"
+                                        className="rounded border-slate-300 text-primary focus:ring-primary"
                                     />
                                 </th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">用户</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">余额</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">流量使用</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">状态</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">到期时间</th>
-                                <th className="px-6 py-4 text-right text-xs font-medium text-slate-400 uppercase tracking-wider">操作</th>
+                                <th className="px-6 py-4">用户信息</th>
+                                <th className="px-6 py-4">余额/流量</th>
+                                <th className="px-6 py-4">状态</th>
+                                <th className="px-6 py-4">到期时间</th>
+                                <th className="px-6 py-4 text-right">操作</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800">
+                        <tbody className="divide-y divide-slate-100">
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
+                                    <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
                                         加载中...
                                     </td>
                                 </tr>
                             ) : users.length === 0 ? (
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
-                                        暂无数据
+                                    <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
+                                        暂无用户
                                     </td>
                                 </tr>
                             ) : (
                                 users.map((user) => (
-                                    <tr key={user.id} className="hover:bg-slate-800/50 transition">
+                                    <tr key={user.id} className="hover:bg-slate-50 transition">
                                         <td className="px-6 py-4">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedIds.includes(user.id)}
                                                 onChange={() => handleSelect(user.id)}
-                                                className="w-4 h-4 rounded border-slate-700 bg-slate-900 text-primary focus:ring-offset-slate-900"
+                                                className="rounded border-slate-300 text-primary focus:ring-primary"
                                             />
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-                                                    <span className="text-white font-medium">
-                                                        {user.email[0].toUpperCase()}
-                                                    </span>
+                                                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                                    {user.email[0].toUpperCase()}
                                                 </div>
                                                 <div>
-                                                    <p className="text-sm font-medium text-white">{user.email}</p>
-                                                    <p className="text-xs text-slate-500">ID: {user.id}</p>
+                                                    <div className="font-medium text-slate-900">{user.email}</div>
+                                                    <div className="text-slate-500 text-xs">ID: {user.id}</div>
                                                 </div>
                                                 {user.is_admin && (
-                                                    <span className="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded">
+                                                    <span className="px-1.5 py-0.5 text-xs bg-yellow-50 text-yellow-600 border border-yellow-100 rounded">
                                                         管理员
                                                     </span>
                                                 )}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className="text-sm text-white">¥{user.balance.toFixed(2)}</span>
-                                        </td>
-                                        <td className="px-6 py-4">
                                             <div className="space-y-1">
-                                                <p className="text-sm text-white">
-                                                    {formatTraffic(user.upload + user.download)} / {formatTraffic(user.transfer_enable)}
-                                                </p>
-                                                <div className="w-24 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                                <div className="text-slate-900 font-medium">¥{user.balance.toFixed(2)}</div>
+                                                <div className="flex items-center gap-2 text-xs text-slate-500">
+                                                    <span>{formatTraffic(user.upload + user.download)} / {formatTraffic(user.transfer_enable)}</span>
+                                                </div>
+                                                <div className="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                                                     <div
                                                         className="h-full bg-primary rounded-full"
                                                         style={{
@@ -441,37 +442,35 @@ export default function UsersPage() {
                                         </td>
                                         <td className="px-6 py-4">
                                             {user.status === 1 ? (
-                                                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-green-500/20 text-green-400 rounded">
+                                                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-green-50 text-green-600 rounded-full border border-green-100">
                                                     <CheckCircle className="w-3 h-3" />
                                                     正常
                                                 </span>
                                             ) : (
-                                                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-red-500/20 text-red-400 rounded">
+                                                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-red-50 text-red-600 rounded-full border border-red-100">
                                                     <Ban className="w-3 h-3" />
                                                     已禁用
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <span className="text-sm text-slate-400">
-                                                {user.expired_at
-                                                    ? new Date(user.expired_at).toLocaleDateString('zh-CN')
-                                                    : '永久'
-                                                }
-                                            </span>
+                                        <td className="px-6 py-4 text-slate-500 text-sm">
+                                            {user.expired_at
+                                                ? new Date(user.expired_at).toLocaleDateString('zh-CN')
+                                                : '永久'
+                                            }
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end gap-2">
                                                 <button
                                                     onClick={() => handleOpenCharge(user)}
-                                                    className="p-2 hover:bg-slate-700 rounded-lg transition text-slate-400 hover:text-green-400"
+                                                    className="p-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition"
                                                     title="充值"
                                                 >
                                                     <DollarSign className="w-4 h-4" />
                                                 </button>
                                                 <button
                                                     onClick={() => resetTrafficMutation.mutate(user.id)}
-                                                    className="p-2 hover:bg-slate-700 rounded-lg transition text-slate-400 hover:text-blue-400"
+                                                    className="p-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition"
                                                     title="重置流量"
                                                 >
                                                     <RotateCcw className="w-4 h-4" />
@@ -479,7 +478,7 @@ export default function UsersPage() {
                                                 {user.status === 1 ? (
                                                     <button
                                                         onClick={() => banMutation.mutate(user.id)}
-                                                        className="p-2 hover:bg-slate-700 rounded-lg transition text-slate-400 hover:text-orange-400"
+                                                        className="p-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition hover:text-orange-600"
                                                         title="禁用"
                                                     >
                                                         <Ban className="w-4 h-4" />
@@ -487,7 +486,7 @@ export default function UsersPage() {
                                                 ) : (
                                                     <button
                                                         onClick={() => unbanMutation.mutate(user.id)}
-                                                        className="p-2 hover:bg-slate-700 rounded-lg transition text-slate-400 hover:text-green-400"
+                                                        className="p-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition hover:text-green-600"
                                                         title="解禁"
                                                     >
                                                         <CheckCircle className="w-4 h-4" />
@@ -495,14 +494,14 @@ export default function UsersPage() {
                                                 )}
                                                 <button
                                                     onClick={() => handleEdit(user)}
-                                                    className="p-2 hover:bg-slate-700 rounded-lg transition text-slate-400 hover:text-white"
+                                                    className="p-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition"
                                                     title="编辑"
                                                 >
                                                     <Edit className="w-4 h-4" />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(user)}
-                                                    className="p-2 hover:bg-slate-700 rounded-lg transition text-slate-400 hover:text-red-400"
+                                                    className="p-1.5 text-slate-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition"
                                                     title="删除"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
@@ -518,25 +517,25 @@ export default function UsersPage() {
 
                 {/* 分页 */}
                 {totalPages > 1 && (
-                    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800">
-                        <p className="text-sm text-slate-400">
+                    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
+                        <p className="text-sm text-slate-500">
                             共 {total} 条记录
                         </p>
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => setPage(p => Math.max(1, p - 1))}
                                 disabled={page === 1}
-                                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 上一页
                             </button>
-                            <span className="text-sm text-slate-400">
+                            <span className="text-sm text-slate-500">
                                 {page} / {totalPages}
                             </span>
                             <button
                                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                                 disabled={page === totalPages}
-                                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 下一页
                             </button>
@@ -548,14 +547,14 @@ export default function UsersPage() {
             {/* 编辑用户模态框 */}
             {showModal && editingUser && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-                        <div className="flex items-center justify-between p-6 border-b border-slate-800">
-                            <h3 className="text-lg font-semibold text-white">
+                    <div className="bg-white border border-slate-200 rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-xl">
+                        <div className="flex items-center justify-between p-6 border-b border-slate-100">
+                            <h3 className="text-lg font-semibold text-slate-900">
                                 编辑用户
                             </h3>
                             <button
                                 onClick={handleCloseModal}
-                                className="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400 hover:text-white"
+                                className="p-2 hover:bg-slate-100 rounded-lg transition text-slate-400 hover:text-slate-600"
                             >
                                 <X className="w-5 h-5" />
                             </button>
@@ -563,78 +562,78 @@ export default function UsersPage() {
 
                         <form onSubmit={handleSubmit} className="p-6 space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2">邮箱</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-2">邮箱</label>
                                 <input
                                     type="email"
                                     value={formData.email}
                                     disabled
-                                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-400"
+                                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-500 cursor-not-allowed"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2">新密码 (留空不修改)</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-2">新密码 (留空不修改)</label>
                                 <input
                                     type="password"
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     placeholder="留空不修改密码"
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">余额 (元)</label>
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">余额 (元)</label>
                                     <input
                                         type="number"
                                         value={formData.balance}
                                         onChange={(e) => setFormData({ ...formData, balance: Number(e.target.value) })}
                                         min={0}
                                         step={0.01}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">流量额度 (GB)</label>
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">流量额度 (GB)</label>
                                     <input
                                         type="number"
                                         value={formData.transfer_enable}
                                         onChange={(e) => setFormData({ ...formData, transfer_enable: Number(e.target.value) })}
                                         min={0}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">用户组 ID</label>
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">用户组 ID</label>
                                     <input
                                         type="number"
                                         value={formData.group_id}
                                         onChange={(e) => setFormData({ ...formData, group_id: Number(e.target.value) })}
                                         min={0}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">到期时间</label>
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">到期时间</label>
                                     <input
                                         type="date"
                                         value={formData.expired_at}
                                         onChange={(e) => setFormData({ ...formData, expired_at: e.target.value })}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                             </div>
 
                             <div className="flex items-center justify-between py-2">
-                                <label className="text-sm font-medium text-slate-300">管理员权限</label>
+                                <label className="text-sm font-medium text-slate-700">管理员权限</label>
                                 <button
                                     type="button"
                                     onClick={() => setFormData({ ...formData, is_admin: !formData.is_admin })}
-                                    className={`relative w-12 h-6 rounded-full transition ${formData.is_admin ? 'bg-primary' : 'bg-slate-700'
+                                    className={`relative w-12 h-6 rounded-full transition ${formData.is_admin ? 'bg-primary' : 'bg-slate-200'
                                         }`}
                                 >
                                     <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition ${formData.is_admin ? 'left-7' : 'left-1'
@@ -643,11 +642,11 @@ export default function UsersPage() {
                             </div>
 
                             {/* 模态框底部 */}
-                            <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+                            <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
                                 <button
                                     type="button"
                                     onClick={handleCloseModal}
-                                    className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition"
                                 >
                                     取消
                                 </button>
@@ -668,21 +667,21 @@ export default function UsersPage() {
             {/* 充值模态框 */}
             {showChargeModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-sm">
+                    <div className="bg-white border border-slate-200 rounded-xl w-full max-w-sm shadow-xl">
                         <div className="p-6">
-                            <h3 className="text-lg font-semibold text-white mb-4">用户充值</h3>
+                            <h3 className="text-lg font-semibold text-slate-900 mb-4">用户充值</h3>
                             <input
                                 type="number"
                                 autoFocus
                                 value={chargeAmount}
                                 onChange={(e) => setChargeAmount(Number(e.target.value))}
-                                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary mb-4"
+                                className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary mb-4"
                                 placeholder="输入金额"
                             />
                             <div className="flex justify-end gap-3">
                                 <button
                                     onClick={() => setShowChargeModal(false)}
-                                    className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition"
                                 >
                                     取消
                                 </button>
@@ -705,10 +704,10 @@ export default function UsersPage() {
             {/* 批量充值模态框 */}
             {showBatchChargeModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-sm">
+                    <div className="bg-white border border-slate-200 rounded-xl w-full max-w-sm shadow-xl">
                         <div className="p-6">
-                            <h3 className="text-lg font-semibold text-white mb-4">批量充值</h3>
-                            <p className="text-slate-400 text-sm mb-4">
+                            <h3 className="text-lg font-semibold text-slate-900 mb-4">批量充值</h3>
+                            <p className="text-slate-500 text-sm mb-4">
                                 将为选中的 {selectedIds.length} 位用户充值。
                             </p>
                             <input
@@ -716,13 +715,13 @@ export default function UsersPage() {
                                 autoFocus
                                 value={chargeAmount}
                                 onChange={(e) => setChargeAmount(Number(e.target.value))}
-                                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary mb-4"
+                                className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary mb-4"
                                 placeholder="输入金额"
                             />
                             <div className="flex justify-end gap-3">
                                 <button
                                     onClick={() => setShowBatchChargeModal(false)}
-                                    className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition"
                                 >
                                     取消
                                 </button>

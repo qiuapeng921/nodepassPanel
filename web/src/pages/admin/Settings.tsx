@@ -72,13 +72,13 @@ export default function SettingsPage() {
             {/* 页面标题 */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">系统设置</h1>
-                    <p className="text-slate-400 mt-1">配置系统参数和功能开关</p>
+                    <h1 className="text-2xl font-bold text-slate-900">系统设置</h1>
+                    <p className="text-slate-500 mt-1">配置系统参数和功能开关</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <button
                         onClick={() => refetch()}
-                        className="p-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                        className="p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-lg transition border border-slate-200"
                     >
                         <RefreshCw className="w-4 h-4" />
                     </button>
@@ -105,8 +105,8 @@ export default function SettingsPage() {
                                     key={key}
                                     onClick={() => setActiveGroup(key)}
                                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition ${isActive
-                                            ? 'bg-primary text-white'
-                                            : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                                        ? 'bg-primary text-white'
+                                        : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
                                         }`}
                                 >
                                     <Icon className="w-5 h-5" />
@@ -118,7 +118,7 @@ export default function SettingsPage() {
                 </div>
 
                 {/* 设置表单 */}
-                <div className="flex-1 bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <div className="flex-1 bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
                     {isLoading ? (
                         <div className="text-center py-12 text-slate-500">加载中...</div>
                     ) : settings.length === 0 ? (
@@ -131,21 +131,20 @@ export default function SettingsPage() {
                             {settings.map((setting) => (
                                 <div key={setting.key} className="space-y-2">
                                     <label className="flex items-center justify-between">
-                                        <span className="text-sm font-medium text-white">{setting.desc || setting.key}</span>
-                                        <span className="text-xs text-slate-500 font-mono">{setting.key}</span>
+                                        <span className="text-sm font-medium text-slate-700">{setting.desc || setting.key}</span>
                                     </label>
 
                                     {setting.type === 'bool' ? (
                                         <div className="flex items-center gap-3">
                                             <button
                                                 onClick={() => handleChange(setting.key, getValue(setting) === 'true' ? 'false' : 'true')}
-                                                className={`relative w-12 h-6 rounded-full transition ${getValue(setting) === 'true' ? 'bg-primary' : 'bg-slate-700'
+                                                className={`relative w-12 h-6 rounded-full transition ${getValue(setting) === 'true' ? 'bg-primary' : 'bg-slate-200'
                                                     }`}
                                             >
                                                 <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition ${getValue(setting) === 'true' ? 'left-7' : 'left-1'
                                                     }`} />
                                             </button>
-                                            <span className="text-sm text-slate-400">
+                                            <span className="text-sm text-slate-500">
                                                 {getValue(setting) === 'true' ? '开启' : '关闭'}
                                             </span>
                                         </div>
@@ -154,14 +153,14 @@ export default function SettingsPage() {
                                             type="number"
                                             value={getValue(setting)}
                                             onChange={(e) => handleChange(setting.key, e.target.value)}
-                                            className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                         />
                                     ) : (
                                         <input
                                             type="text"
                                             value={getValue(setting)}
                                             onChange={(e) => handleChange(setting.key, e.target.value)}
-                                            className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                         />
                                     )}
                                 </div>

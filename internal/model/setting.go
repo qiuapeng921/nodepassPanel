@@ -43,3 +43,12 @@ const (
 	SettingGroupMail    = "mail"    // 邮件设置
 	SettingGroupInvite  = "invite"  // 邀请设置
 )
+
+const (
+	// 邮件设置键名
+	SettingKeyMailHost = "mail_host"
+	SettingKeyMailPort = "mail_port"
+	SettingKeyMailUser = "mail_user"
+	SettingKeyMailPass = "mail_pass"
+	SettingKeyMailFrom = "mail_from"
+)

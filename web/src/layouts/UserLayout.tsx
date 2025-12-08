@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, Outlet, Navigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import {
     LayoutDashboard,
     Package,
@@ -15,6 +16,7 @@ import {
     CreditCard
 } from 'lucide-react';
 import { clsx } from 'clsx';
+import api from '../lib/api';
 
 // 导航菜单配置
 const navItems = [
@@ -43,10 +45,9 @@ function NavItem({ item, collapsed, onClick }: {
             onClick={onClick}
             className={clsx(
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
-                'hover:bg-white/10',
                 isActive
                     ? 'bg-primary text-white shadow-lg shadow-primary/25'
-                    : 'text-slate-300 hover:text-white'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
             )}
         >
             <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -60,6 +61,19 @@ export default function UserLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
     const [copied, setCopied] = useState(false);
+
+    // 获取站点设置
+    const { data: settings } = useQuery<{ data: Record<string, string> }>({
+        queryKey: ['public-settings'],
+        queryFn: () => api.get('/settings').then(res => res.data),
+    });
+
+    const siteName = settings?.data?.site_name || 'NyanPass';
+
+    // 更新页面标题
+    useEffect(() => {
+        document.title = siteName;
+    }, [siteName]);
 
     // 检查登录状态
     const token = localStorage.getItem('token');
@@ -93,7 +107,7 @@ export default function UserLayout() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-950">
+        <div className="min-h-screen bg-slate-50">
             {/* 移动端遮罩 */}
             {sidebarOpen && (
                 <div
@@ -105,33 +119,33 @@ export default function UserLayout() {
             {/* 侧边栏 */}
             <aside
                 className={clsx(
-                    'fixed top-0 left-0 z-50 h-full bg-slate-900 border-r border-slate-800',
+                    'fixed top-0 left-0 z-50 h-full bg-white border-r border-slate-200',
                     'transition-all duration-300 ease-in-out',
                     collapsed ? 'w-20' : 'w-64',
                     sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
                 )}
             >
                 {/* Logo */}
-                <div className="flex items-center justify-between h-16 px-4 border-b border-slate-800">
+                <div className="flex items-center justify-between h-16 px-4 border-b border-slate-100">
                     {!collapsed && (
                         <Link to="/dashboard" className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
+                            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                                 <span className="text-white font-bold text-sm">N</span>
                             </div>
-                            <span className="text-lg font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-                                NyanPass
+                            <span className="text-lg font-bold text-slate-900">
+                                {siteName}
                             </span>
                         </Link>
                     )}
                     <button
                         onClick={() => setCollapsed(!collapsed)}
-                        className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition hidden lg:block"
+                        className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition hidden lg:block"
                     >
                         <Menu className="w-5 h-5" />
                     </button>
                     <button
                         onClick={() => setSidebarOpen(false)}
-                        className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition lg:hidden"
+                        className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition lg:hidden"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -154,7 +168,7 @@ export default function UserLayout() {
                     <div className="absolute bottom-24 left-0 right-0 px-4">
                         <button
                             onClick={handleCopySubscribe}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-500 text-white rounded-lg transition shadow-lg shadow-primary/25"
+                            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg transition shadow-lg shadow-primary/25"
                         >
                             {copied ? (
                                 <>
@@ -172,22 +186,22 @@ export default function UserLayout() {
                 )}
 
                 {/* 用户信息 */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-800">
+                <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-100">
                     <div className={clsx(
                         'flex items-center gap-3',
                         collapsed && 'justify-center'
                     )}>
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center flex-shrink-0">
-                            <span className="text-white font-medium">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <span className="text-primary font-medium">
                                 {user?.email?.[0]?.toUpperCase() || 'U'}
                             </span>
                         </div>
                         {!collapsed && (
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-white truncate">
+                                <p className="text-sm font-medium text-slate-900 truncate">
                                     {user?.email || 'User'}
                                 </p>
-                                <p className="text-xs text-slate-400">普通用户</p>
+                                <p className="text-xs text-slate-500">普通用户</p>
                             </div>
                         )}
                         {!collapsed && (
@@ -195,7 +209,7 @@ export default function UserLayout() {
                                 {isAdmin && (
                                     <Link
                                         to="/admin"
-                                        className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-primary transition"
+                                        className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-primary transition"
                                         title="管理后台"
                                     >
                                         <Zap className="w-4 h-4" />
@@ -203,7 +217,7 @@ export default function UserLayout() {
                                 )}
                                 <button
                                     onClick={handleLogout}
-                                    className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-red-400 transition"
+                                    className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition"
                                     title="退出登录"
                                 >
                                     <LogOut className="w-4 h-4" />
@@ -222,11 +236,11 @@ export default function UserLayout() {
                 )}
             >
                 {/* 顶部栏 */}
-                <header className="sticky top-0 z-30 h-16 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
+                <header className="sticky top-0 z-30 h-16 bg-white/80 backdrop-blur-xl border-b border-slate-200">
                     <div className="flex items-center justify-between h-full px-4 lg:px-6">
                         <button
                             onClick={() => setSidebarOpen(true)}
-                            className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition lg:hidden"
+                            className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition lg:hidden"
                         >
                             <Menu className="w-5 h-5" />
                         </button>
@@ -237,7 +251,7 @@ export default function UserLayout() {
                         <div className="flex items-center gap-4">
                             <button
                                 onClick={handleCopySubscribe}
-                                className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition"
+                                className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition"
                             >
                                 {copied ? (
                                     <>
@@ -255,7 +269,7 @@ export default function UserLayout() {
                             {isAdmin && (
                                 <Link
                                     to="/admin"
-                                    className="hidden md:flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                                    className="hidden md:flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg transition"
                                 >
                                     <Zap className="w-4 h-4" />
                                     <span>管理后台</span>

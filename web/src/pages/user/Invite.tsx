@@ -83,12 +83,12 @@ export default function UserInvitePage() {
             {/* 页面标题 */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">邀请返利</h1>
-                    <p className="text-slate-400 mt-1">邀请好友注册赚取佣金</p>
+                    <h1 className="text-2xl font-bold text-slate-900">邀请返利</h1>
+                    <p className="text-slate-500 mt-1">邀请好友注册赚取佣金</p>
                 </div>
                 <button
                     onClick={() => refetch()}
-                    className="p-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                    className="p-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition shadow-sm"
                     title="刷新"
                 >
                     <RefreshCw className="w-4 h-4" />
@@ -97,71 +97,71 @@ export default function UserInvitePage() {
 
             {/* 统计卡片 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 border border-blue-500/30 rounded-xl p-5">
+                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
                     <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-blue-500/20 rounded-lg">
-                            <Users className="w-5 h-5 text-blue-400" />
+                        <div className="p-2 bg-blue-50 text-blue-500 rounded-lg">
+                            <Users className="w-5 h-5" />
                         </div>
-                        <span className="text-slate-400">邀请人数</span>
+                        <span className="text-slate-500">邀请人数</span>
                     </div>
-                    <p className="text-3xl font-bold text-white">
+                    <p className="text-3xl font-bold text-slate-900">
                         {loadingInfo ? '...' : info?.invite_count || 0}
                     </p>
                 </div>
 
-                <div className="bg-gradient-to-br from-green-600/20 to-green-800/20 border border-green-500/30 rounded-xl p-5">
+                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
                     <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-green-500/20 rounded-lg">
-                            <DollarSign className="w-5 h-5 text-green-400" />
+                        <div className="p-2 bg-green-50 text-green-500 rounded-lg">
+                            <DollarSign className="w-5 h-5" />
                         </div>
-                        <span className="text-slate-400">累计佣金</span>
+                        <span className="text-slate-500">累计佣金</span>
                     </div>
-                    <p className="text-3xl font-bold text-white">
+                    <p className="text-3xl font-bold text-slate-900">
                         ¥{loadingInfo ? '...' : (info?.total_commission || 0).toFixed(2)}
                     </p>
                 </div>
 
-                <div className="bg-gradient-to-br from-orange-600/20 to-orange-800/20 border border-orange-500/30 rounded-xl p-5">
+                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
                     <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-orange-500/20 rounded-lg">
-                            <Clock className="w-5 h-5 text-orange-400" />
+                        <div className="p-2 bg-orange-50 text-orange-500 rounded-lg">
+                            <Clock className="w-5 h-5" />
                         </div>
-                        <span className="text-slate-400">待结算</span>
+                        <span className="text-slate-500">待结算</span>
                     </div>
-                    <p className="text-3xl font-bold text-white">
+                    <p className="text-3xl font-bold text-slate-900">
                         ¥{loadingInfo ? '...' : (info?.pending_commission || 0).toFixed(2)}
                     </p>
                 </div>
             </div>
 
             {/* 邀请链接 */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-800">
+            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div className="px-6 py-4 border-b border-slate-100">
                     <div className="flex items-center gap-3">
                         <Share2 className="w-5 h-5 text-primary" />
-                        <h2 className="text-lg font-semibold text-white">我的邀请链接</h2>
+                        <h2 className="text-lg font-semibold text-slate-900">我的邀请链接</h2>
                     </div>
                 </div>
 
                 <div className="p-6">
                     <div className="mb-4">
-                        <p className="text-sm text-slate-400 mb-2">邀请码</p>
+                        <p className="text-sm text-slate-500 mb-2">邀请码</p>
                         <div className="flex items-center gap-2">
-                            <div className="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg font-mono text-lg text-primary">
+                            <div className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg font-mono text-lg text-primary select-all">
                                 {loadingInfo ? '...' : info?.invite_code || '-'}
                             </div>
                         </div>
                     </div>
 
                     <div>
-                        <p className="text-sm text-slate-400 mb-2">邀请链接</p>
+                        <p className="text-sm text-slate-500 mb-2">邀请链接</p>
                         <div className="flex items-center gap-2">
-                            <div className="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white truncate">
+                            <div className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 truncate select-all">
                                 {loadingInfo ? '...' : info?.invite_link || '-'}
                             </div>
                             <button
                                 onClick={handleCopy}
-                                className="px-4 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg transition flex items-center gap-2"
+                                className="px-4 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg transition flex items-center gap-2 shadow-sm"
                             >
                                 {copied ? (
                                     <>
@@ -178,8 +178,8 @@ export default function UserInvitePage() {
                         </div>
                     </div>
 
-                    <div className="mt-6 p-4 bg-slate-800/50 rounded-lg">
-                        <p className="text-sm text-slate-400">
+                    <div className="mt-6 p-4 bg-slate-50 border border-slate-100 rounded-lg">
+                        <p className="text-sm text-slate-500">
                             <Gift className="w-4 h-4 inline-block mr-1" />
                             当您邀请的好友首次付费时，您将获得订单金额的返利佣金。
                         </p>
@@ -188,22 +188,22 @@ export default function UserInvitePage() {
             </div>
 
             {/* 邀请记录 */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-800">
-                    <h2 className="text-lg font-semibold text-white">邀请记录</h2>
+            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div className="px-6 py-4 border-b border-slate-100">
+                    <h2 className="text-lg font-semibold text-slate-900">邀请记录</h2>
                 </div>
 
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
-                            <tr className="border-b border-slate-800">
-                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase">用户</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase">佣金</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase">状态</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase">邀请时间</th>
+                            <tr className="border-b border-slate-100 bg-slate-50/50">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">用户</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">佣金</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">状态</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">邀请时间</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800">
+                        <tbody className="divide-y divide-slate-100">
                             {loadingRecords ? (
                                 <tr>
                                     <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
@@ -218,23 +218,23 @@ export default function UserInvitePage() {
                                 </tr>
                             ) : (
                                 records.map((record) => (
-                                    <tr key={record.id} className="hover:bg-slate-800/50 transition">
-                                        <td className="px-6 py-4 text-white">{record.email}</td>
-                                        <td className="px-6 py-4 text-green-400">
+                                    <tr key={record.id} className="hover:bg-slate-50 transition">
+                                        <td className="px-6 py-4 text-slate-900">{record.email}</td>
+                                        <td className="px-6 py-4 text-green-600 font-medium">
                                             ¥{record.commission.toFixed(2)}
                                         </td>
                                         <td className="px-6 py-4">
                                             {record.status === 1 ? (
-                                                <span className="px-2 py-1 text-xs bg-green-500/20 text-green-400 rounded">
+                                                <span className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">
                                                     已结算
                                                 </span>
                                             ) : (
-                                                <span className="px-2 py-1 text-xs bg-yellow-500/20 text-yellow-400 rounded">
+                                                <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded">
                                                     待结算
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4 text-slate-400">
+                                        <td className="px-6 py-4 text-slate-500">
                                             {formatDate(record.created_at)}
                                         </td>
                                     </tr>
@@ -246,21 +246,21 @@ export default function UserInvitePage() {
 
                 {/* 分页 */}
                 {totalPages > 1 && (
-                    <div className="px-6 py-4 border-t border-slate-800 flex items-center justify-between">
-                        <p className="text-sm text-slate-400">共 {total} 条记录</p>
+                    <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between">
+                        <p className="text-sm text-slate-500">共 {total} 条记录</p>
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => setPage(p => Math.max(1, p - 1))}
                                 disabled={page === 1}
-                                className="p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition disabled:opacity-50"
+                                className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition disabled:opacity-50 shadow-sm"
                             >
                                 <ChevronLeft className="w-4 h-4" />
                             </button>
-                            <span className="text-sm text-slate-400">{page} / {totalPages}</span>
+                            <span className="text-sm text-slate-500">{page} / {totalPages}</span>
                             <button
                                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                                 disabled={page === totalPages}
-                                className="p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition disabled:opacity-50"
+                                className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition disabled:opacity-50 shadow-sm"
                             >
                                 <ChevronRight className="w-4 h-4" />
                             </button>

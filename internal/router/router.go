@@ -109,8 +109,10 @@ func InitRouter() *gin.Engine {
 			user.GET("/invite/records", inviteHandler.GetInviteRecords)
 
 			// 充值
+			// 充值
 			rechargeHandler := handler.NewRechargeHandler()
 			user.POST("/recharge", rechargeHandler.RechargeByCode)
+			user.POST("/recharge/online", rechargeHandler.CreateOnlineRecharge)
 
 			// 优惠券
 			couponHandler := handler.NewCouponHandler()

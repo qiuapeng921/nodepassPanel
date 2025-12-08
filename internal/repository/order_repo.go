@@ -47,17 +47,20 @@ func (r *OrderRepository) GetAll() ([]model.Order, error) {
 }
 
 // GetPaginated 分页获取订单
-func (r *OrderRepository) GetPaginated(page, pageSize int, status *int, userID *uint) ([]model.Order, int64, error) {
+func (r *OrderRepository) GetPaginated(page, pageSize int, status *int, keyword string) ([]model.Order, int64, error) {
 	var orders []model.Order
 	var total int64
 
-	query := global.DB.Model(&model.Order{})
+	query := global.DB.Model(&model.Order{}).Preload("User").Preload("Plan")
 
 	if status != nil {
-		query = query.Where("status = ?", *status)
+		query = query.Where("orders.status = ?", *status)
 	}
-	if userID != nil {
-		query = query.Where("user_id = ?", *userID)
+
+	if keyword != "" {
+		// 关联用户表进行搜索
+		query = query.Joins("LEFT JOIN users ON users.id = orders.user_id").
+			Where("orders.order_no LIKE ? OR users.email LIKE ?", "%"+keyword+"%", "%"+keyword+"%")
 	}
 
 	if err := query.Count(&total).Error; err != nil {
@@ -65,7 +68,7 @@ func (r *OrderRepository) GetPaginated(page, pageSize int, status *int, userID *
 	}
 
 	offset := (page - 1) * pageSize
-	if err := query.Offset(offset).Limit(pageSize).Order("id DESC").Find(&orders).Error; err != nil {
+	if err := query.Offset(offset).Limit(pageSize).Order("orders.id DESC").Find(&orders).Error; err != nil {
 		return nil, 0, err
 	}
 

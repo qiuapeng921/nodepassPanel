@@ -3,9 +3,10 @@ package payment
 type PaymentMethod string
 
 const (
-	MethodStripe PaymentMethod = "stripe"
-	MethodAlipay PaymentMethod = "alipay"
-	MethodWeChat PaymentMethod = "wxpay"
+	MethodStripe  PaymentMethod = "stripe"
+	MethodAlipay  PaymentMethod = "alipay"
+	MethodWeChat  PaymentMethod = "wxpay"
+	MethodBalance PaymentMethod = "balance"
 )
 
 // PayRequest 支付请求

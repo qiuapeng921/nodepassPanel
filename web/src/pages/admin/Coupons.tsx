@@ -216,13 +216,13 @@ export default function CouponsPage() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">优惠券管理</h1>
-                    <p className="text-slate-400 mt-1">创建和管理优惠券及促销活动</p>
+                    <h1 className="text-2xl font-bold text-slate-900">优惠券管理</h1>
+                    <p className="text-slate-500 mt-1">创建和管理优惠券及促销活动</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <button
                         onClick={() => refetch()}
-                        className="p-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                        className="p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-lg transition border border-slate-200"
                         title="刷新"
                     >
                         <RefreshCw className="w-4 h-4" />
@@ -245,78 +245,78 @@ export default function CouponsPage() {
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                        className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                     />
                 </div>
                 <button
                     onClick={handleSearch}
-                    className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                    className="px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-lg transition border border-slate-200"
                 >
                     搜索
                 </button>
             </div>
 
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
+            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                 <div className="overflow-x-auto">
                     <table className="w-full">
-                        <thead>
-                            <tr className="border-b border-slate-800">
-                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">优惠券码</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">类型</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">面值</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">使用限制</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">已使用</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">状态</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">过期时间</th>
-                                <th className="px-6 py-4 text-right text-xs font-medium text-slate-400 uppercase">操作</th>
+                        <thead className="bg-slate-50">
+                            <tr className="border-b border-slate-200">
+                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase">优惠券码</th>
+                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase">类型</th>
+                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase">面值</th>
+                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase">使用限制</th>
+                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase">已使用</th>
+                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase">状态</th>
+                                <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase">过期时间</th>
+                                <th className="px-6 py-4 text-right text-xs font-medium text-slate-500 uppercase">操作</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800">
+                        <tbody className="divide-y divide-slate-100">
                             {isLoading ? (
                                 <tr><td colSpan={8} className="p-8 text-center text-slate-500">加载中...</td></tr>
                             ) : coupons.length === 0 ? (
                                 <tr><td colSpan={8} className="p-8 text-center text-slate-500">暂无数据</td></tr>
                             ) : (
                                 coupons.map((coupon: any) => ( // Keeping 'any' here temporarily or I should fix the interface
-                                    <tr key={coupon.id} className="hover:bg-slate-800/50">
+                                    <tr key={coupon.id} className="hover:bg-slate-50 transition">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2">
-                                                <span className="font-mono text-white">{coupon.code}</span>
-                                                <button onClick={() => handleCopy(coupon.code)} className="text-slate-500 hover:text-white transition">
+                                                <span className="font-mono text-slate-900">{coupon.code}</span>
+                                                <button onClick={() => handleCopy(coupon.code)} className="text-slate-400 hover:text-slate-600 transition">
                                                     <Copy className="w-3 h-3" />
                                                 </button>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-slate-300">
+                                        <td className="px-6 py-4 text-slate-600">
                                             {coupon.type === 1 ? '金额抵扣' : coupon.type === 2 ? '百分比折扣' : '免费天数'}
                                         </td>
-                                        <td className="px-6 py-4 text-green-400 font-bold">
+                                        <td className="px-6 py-4 text-green-600 font-bold">
                                             {coupon.type === 1 ? `¥${coupon.value}` : coupon.type === 2 ? `${coupon.value}% OFF` : `${coupon.value} 天`}
                                         </td>
-                                        <td className="px-6 py-4 text-slate-400 text-sm">
+                                        <td className="px-6 py-4 text-slate-500 text-sm">
                                             <div>总限: {coupon.total_limit || '无'}</div>
                                             <div>用户: {coupon.limit_per_user || '无'}</div>
                                         </td>
-                                        <td className="px-6 py-4 text-slate-300">{coupon.used_count}</td>
+                                        <td className="px-6 py-4 text-slate-600">{coupon.used_count}</td>
                                         <td className="px-6 py-4">
                                             {coupon.status === 1 ? (
-                                                <span className="flex items-center gap-1 text-green-400 text-xs bg-green-500/10 px-2 py-1 rounded">
+                                                <span className="flex items-center gap-1 text-green-600 text-xs bg-green-50 px-2 py-1 rounded border border-green-100">
                                                     <CheckCircle className="w-3 h-3" /> 启用
                                                 </span>
                                             ) : (
-                                                <span className="flex items-center gap-1 text-red-400 text-xs bg-red-500/10 px-2 py-1 rounded">
+                                                <span className="flex items-center gap-1 text-red-600 text-xs bg-red-50 px-2 py-1 rounded border border-red-100">
                                                     <Ban className="w-3 h-3" /> 禁用
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4 text-slate-400 text-sm">
+                                        <td className="px-6 py-4 text-slate-500 text-sm">
                                             {formatDate(coupon.expired_at)}
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex justify-end gap-2">
                                                 {/* Use 'any' type cast if needed for handleEdit to accept the coupon from map, or ensure map uses defined Interface */}
-                                                <button onClick={() => handleEdit(coupon as unknown as Coupon)} className="p-2 hover:bg-slate-700 rounded text-slate-400 hover:text-white"><Edit className="w-4 h-4" /></button>
-                                                <button onClick={() => handleDelete(coupon.id)} className="p-2 hover:bg-slate-700 rounded text-slate-400 hover:text-red-400"><Trash2 className="w-4 h-4" /></button>
+                                                <button onClick={() => handleEdit(coupon as unknown as Coupon)} className="p-2 hover:bg-slate-100 rounded text-slate-500 hover:text-slate-700"><Edit className="w-4 h-4" /></button>
+                                                <button onClick={() => handleDelete(coupon.id)} className="p-2 hover:bg-red-50 rounded text-slate-500 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -328,25 +328,25 @@ export default function CouponsPage() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800">
-                        <p className="text-sm text-slate-400">
+                    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
+                        <p className="text-sm text-slate-500">
                             共 {total} 条记录
                         </p>
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => setPage(p => Math.max(1, p - 1))}
                                 disabled={page === 1}
-                                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 上一页
                             </button>
-                            <span className="text-sm text-slate-400">
+                            <span className="text-sm text-slate-500">
                                 {page} / {totalPages}
                             </span>
                             <button
                                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                                 disabled={page === totalPages}
-                                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 下一页
                             </button>
@@ -358,34 +358,34 @@ export default function CouponsPage() {
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                        <div className="flex justify-between items-center p-6 border-b border-slate-800">
-                            <h3 className="text-lg font-bold text-white">{editingId ? '编辑优惠券' : '新建优惠券'}</h3>
-                            <button onClick={handleCloseModal}><X className="w-5 h-5 text-slate-400 hover:text-white" /></button>
+                    <div className="bg-white border border-slate-200 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
+                        <div className="flex justify-between items-center p-6 border-b border-slate-100">
+                            <h3 className="text-lg font-bold text-slate-900">{editingId ? '编辑优惠券' : '新建优惠券'}</h3>
+                            <button onClick={handleCloseModal}><X className="w-5 h-5 text-slate-400 hover:text-slate-600" /></button>
                         </div>
                         <form onSubmit={handleSave} className="p-6 space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="col-span-2">
-                                    <label className="block text-sm text-slate-400 mb-1">优惠券码</label>
+                                    <label className="block text-sm text-slate-700 mb-1">优惠券码</label>
                                     <div className="flex gap-2">
                                         <input
                                             type="text"
                                             value={formData.code}
                                             onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                                            className="flex-1 bg-slate-800 border-slate-700 rounded px-3 py-2 text-white"
+                                            className="flex-1 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-900 focus:outline-none focus:border-primary"
                                             placeholder="留空自动生成"
                                         />
-                                        <button type="button" onClick={generateCode} className="px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded text-white flex gap-1 items-center">
+                                        <button type="button" onClick={generateCode} className="px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 border border-slate-200 flex gap-1 items-center transition">
                                             <RefreshCw className="w-4 h-4" /> 生成
                                         </button>
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-slate-400 mb-1">类型</label>
+                                    <label className="block text-sm text-slate-700 mb-1">类型</label>
                                     <select
                                         value={formData.type}
                                         onChange={(e) => setFormData({ ...formData, type: Number(e.target.value) })}
-                                        className="w-full bg-slate-800 border-slate-700 rounded px-3 py-2 text-white"
+                                        className="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-900 focus:outline-none focus:border-primary"
                                     >
                                         <option value={1}>金额抵扣</option>
                                         <option value={2}>百分比折扣</option>
@@ -393,94 +393,94 @@ export default function CouponsPage() {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-slate-400 mb-1">
+                                    <label className="block text-sm text-slate-700 mb-1">
                                         {formData.type === 1 ? '减免金额' : formData.type === 2 ? '折扣百分比 (1-100)' : '赠送天数'}
                                     </label>
                                     <input
                                         type="number"
                                         value={formData.value}
                                         onChange={(e) => setFormData({ ...formData, value: Number(e.target.value) })}
-                                        className="w-full bg-slate-800 border-slate-700 rounded px-3 py-2 text-white"
+                                        className="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-slate-400 mb-1">最低消费 (元)</label>
+                                    <label className="block text-sm text-slate-700 mb-1">最低消费 (元)</label>
                                     <input
                                         type="number"
                                         value={formData.min_amount}
                                         onChange={(e) => setFormData({ ...formData, min_amount: Number(e.target.value) })}
-                                        className="w-full bg-slate-800 border-slate-700 rounded px-3 py-2 text-white"
+                                        className="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-slate-400 mb-1">最大抵扣 (仅百分比有效)</label>
+                                    <label className="block text-sm text-slate-700 mb-1">最大抵扣 (仅百分比有效)</label>
                                     <input
                                         type="number"
                                         value={formData.max_discount}
                                         onChange={(e) => setFormData({ ...formData, max_discount: Number(e.target.value) })}
-                                        className="w-full bg-slate-800 border-slate-700 rounded px-3 py-2 text-white"
+                                        className="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-slate-400 mb-1">每人限用</label>
+                                    <label className="block text-sm text-slate-700 mb-1">每人限用</label>
                                     <input
                                         type="number"
                                         value={formData.limit_per_user}
                                         onChange={(e) => setFormData({ ...formData, limit_per_user: Number(e.target.value) })}
-                                        className="w-full bg-slate-800 border-slate-700 rounded px-3 py-2 text-white"
+                                        className="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-slate-400 mb-1">总次数限制 (0不限)</label>
+                                    <label className="block text-sm text-slate-700 mb-1">总次数限制 (0不限)</label>
                                     <input
                                         type="number"
                                         value={formData.total_limit}
                                         onChange={(e) => setFormData({ ...formData, total_limit: Number(e.target.value) })}
-                                        className="w-full bg-slate-800 border-slate-700 rounded px-3 py-2 text-white"
+                                        className="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                                 <div className="col-span-2">
-                                    <label className="block text-sm text-slate-400 mb-1">指定套餐ID (逗号分隔，留空所有)</label>
+                                    <label className="block text-sm text-slate-700 mb-1">指定套餐ID (逗号分隔，留空所有)</label>
                                     <input
                                         type="text"
                                         value={formData.plan_ids}
                                         onChange={(e) => setFormData({ ...formData, plan_ids: e.target.value })}
-                                        className="w-full bg-slate-800 border-slate-700 rounded px-3 py-2 text-white"
+                                        className="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-900 focus:outline-none focus:border-primary"
                                         placeholder="例如: 1,2,3"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-slate-400 mb-1">开始时间</label>
+                                    <label className="block text-sm text-slate-700 mb-1">开始时间</label>
                                     <input
                                         type="datetime-local"
                                         value={formData.start_at}
                                         onChange={(e) => setFormData({ ...formData, start_at: e.target.value })}
-                                        className="w-full bg-slate-800 border-slate-700 rounded px-3 py-2 text-white"
+                                        className="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-slate-400 mb-1">过期时间</label>
+                                    <label className="block text-sm text-slate-700 mb-1">过期时间</label>
                                     <input
                                         type="datetime-local"
                                         value={formData.expired_at}
                                         onChange={(e) => setFormData({ ...formData, expired_at: e.target.value })}
-                                        className="w-full bg-slate-800 border-slate-700 rounded px-3 py-2 text-white"
+                                        className="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
-                                <div className="col-span-2 flex items-center justify-between py-2 border-t border-slate-800 mt-2">
-                                    <span className="text-white">状态</span>
+                                <div className="col-span-2 flex items-center justify-between py-2 border-t border-slate-100 mt-2">
+                                    <span className="text-slate-700">状态</span>
                                     <button
                                         type="button"
                                         onClick={() => setFormData({ ...formData, status: formData.status === 1 ? 0 : 1 })}
-                                        className={`w-12 h-6 rounded-full relative transition ${formData.status === 1 ? 'bg-primary' : 'bg-slate-700'}`}
+                                        className={`w-12 h-6 rounded-full relative transition ${formData.status === 1 ? 'bg-primary' : 'bg-slate-200'}`}
                                     >
                                         <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all ${formData.status === 1 ? 'left-7' : 'left-1'}`} />
                                     </button>
                                 </div>
                             </div>
-                            <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                                <button type="button" onClick={handleCloseModal} className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded">取消</button>
-                                <button type="submit" className="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded flex items-center gap-2">
+                            <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                                <button type="button" onClick={handleCloseModal} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition">取消</button>
+                                <button type="submit" className="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded flex items-center gap-2 transition">
                                     <Save className="w-4 h-4" /> 保存
                                 </button>
                             </div>

@@ -4,10 +4,12 @@
 @theme {
   --color-primary: #4f46e5;
   --color-primary-foreground: #ffffff;
-  --color-secondary: #1e293b;
-  --color-secondary-foreground: #f8fafc;
-  --color-background: #0f172a;
-  --color-foreground: #f1f5f9;
+  --color-secondary: #f1f5f9;
+  --color-secondary-foreground: #0f172a;
+  --color-background: #f8fafc;
+  /* Slate 50 */
+  --color-foreground: #0f172a;
+  /* Slate 900 */
 
   --font-sans: 'Inter', sans-serif;
 }

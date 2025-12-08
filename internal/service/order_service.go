@@ -39,10 +39,10 @@ type CreateOrderRequest struct {
 
 // OrderListQuery 订单列表查询
 type OrderListQuery struct {
-	Page     int   `form:"page" binding:"omitempty,min=1"`
-	PageSize int   `form:"page_size" binding:"omitempty,min=1,max=100"`
-	Status   *int  `form:"status"`
-	UserID   *uint `form:"user_id"`
+	Page     int    `form:"page" binding:"omitempty,min=1"`
+	PageSize int    `form:"page_size" binding:"omitempty,min=1,max=100"`
+	Status   *int   `form:"status"`
+	Keyword  string `form:"keyword"` // 搜索关键字：订单号或邮箱
 }
 
 // OrderListResponse 订单列表响应
@@ -92,10 +92,12 @@ func (s *OrderService) Create(userID uint, req *CreateOrderRequest) (*model.Orde
 	now := time.Now()
 	expiredAt := now.Add(30 * time.Minute) // 30分钟过期
 
+	planID := req.PlanID
 	order := &model.Order{
 		OrderNo:   generateOrderNo(),
+		Type:      model.OrderTypePlan,
 		UserID:    userID,
-		PlanID:    req.PlanID,
+		PlanID:    &planID,
 		CouponID:  couponID,
 		PayMethod: "",
 		Amount:    amount,
@@ -127,6 +129,36 @@ func (s *OrderService) Create(userID uint, req *CreateOrderRequest) (*model.Orde
 	return order, nil
 }
 
+// CreateRechargeOrder 创建充值订单
+func (s *OrderService) CreateRechargeOrder(userID uint, amount float64) (*model.Order, error) {
+	if amount <= 0 {
+		return nil, errors.New("invalid amount")
+	}
+
+	now := time.Now()
+	expiredAt := now.Add(30 * time.Minute)
+
+	order := &model.Order{
+		OrderNo:   generateOrderNo(),
+		Type:      model.OrderTypeRecharge,
+		UserID:    userID,
+		PlanID:    nil,
+		CouponID:  nil,
+		Amount:    amount,
+		Paid:      amount,
+		Discount:  0,
+		Status:    model.OrderStatusPending,
+		ExpiredAt: &expiredAt,
+		Remark:    "余额充值",
+	}
+
+	if err := s.orderRepo.Create(order); err != nil {
+		return nil, err
+	}
+
+	return order, nil
+}
+
 // GetByID 获取订单详情
 func (s *OrderService) GetByID(id uint) (*model.Order, error) {
 	return s.orderRepo.GetByID(id)
@@ -151,7 +183,7 @@ func (s *OrderService) GetOrderList(query *OrderListQuery) (*OrderListResponse, 
 		query.PageSize = 20
 	}
 
-	orders, total, err := s.orderRepo.GetPaginated(query.Page, query.PageSize, query.Status, query.UserID)
+	orders, total, err := s.orderRepo.GetPaginated(query.Page, query.PageSize, query.Status, query.Keyword)
 	if err != nil {
 		return nil, err
 	}
@@ -234,8 +266,19 @@ func (s *OrderService) processOrderCompletion(order *model.Order) error {
 		return err
 	}
 
+	// 充值订单处理
+	if order.Type == model.OrderTypeRecharge {
+		user.Balance += order.Amount
+		return s.userRepo.Update(user)
+	}
+
+	// 必须要有 PlanID
+	if order.PlanID == nil {
+		return errors.New("invalid order: missing plan_id for plan order")
+	}
+
 	// 获取套餐
-	plan, err := s.planRepo.GetByID(order.PlanID)
+	plan, err := s.planRepo.GetByID(*order.PlanID)
 	if err != nil {
 		return err
 	}
@@ -309,6 +352,48 @@ func (s *OrderService) PayOrder(orderNo string, method payment.PaymentMethod, cl
 
 	if order.Status != model.OrderStatusPending {
 		return nil, errors.New("order is not pending")
+	}
+
+	// 余额支付特殊处理
+	if method == payment.MethodBalance {
+		user, err := s.userRepo.GetByID(order.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		if user.Balance < order.Amount {
+			return nil, errors.New("余额不足")
+		}
+
+		if order.Type == model.OrderTypeRecharge {
+			return nil, errors.New("充值订单不能使用余额支付")
+		}
+
+		// 扣除余额
+		user.Balance -= order.Amount
+		if err := s.userRepo.Update(user); err != nil {
+			return nil, err
+		}
+
+		// 标记支付成功
+		now := time.Now()
+		order.Status = model.OrderStatusPaid
+		order.PaidAt = &now
+		order.PayMethod = string(method)
+		if err := s.orderRepo.Update(order); err != nil {
+			return nil, err
+		}
+
+		// 完成订单
+		if err := s.processOrderCompletion(order); err != nil {
+			return nil, err
+		}
+
+		return &payment.PayResponse{
+			PayURL:      "",
+			ContentType: "success",
+			TradeNo:     fmt.Sprintf("BAL%s", order.OrderNo),
+		}, nil
 	}
 
 	// 创建支付策略
