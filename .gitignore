@@ -1,0 +1,22 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+bin/
+# Logs
+*.log
+# Vendor
+vendor/
+# Test
+coverage.txt
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+# Config
+config/config.yaml
+# OS
+.DS_Store
+Thumbs.db

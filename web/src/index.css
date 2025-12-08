@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+/* 自定义主题变量 */
+@theme {
+  --color-primary: #4f46e5;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #1e293b;
+  --color-secondary-foreground: #f8fafc;
+  --color-background: #0f172a;
+  --color-foreground: #f1f5f9;
+
+  --font-sans: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
