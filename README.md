@@ -30,7 +30,7 @@ NyanPass 是一个高性能的流量中转面板，后端采用 Go (Gin + GORM) 
 
 ### 2. 克隆项目
 ```bash
-git clone https://github.com/your/nodepassPanel.git
+git clone https://github.com/qiuapeng921/nodepassPanel.git
 cd nodepassPanel
 ```
 
