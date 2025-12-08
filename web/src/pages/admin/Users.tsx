@@ -276,8 +276,8 @@ export default function UsersPage() {
             {/* 页面标题 */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">用户管理</h1>
-                    <p className="text-slate-400 mt-1">管理系统中的所有用户</p>
+                    <h1 className="text-2xl font-bold text-slate-900">用户管理</h1>
+                    <p className="text-slate-500 mt-1">管理系统中的所有用户</p>
                 </div>
             </div>
 

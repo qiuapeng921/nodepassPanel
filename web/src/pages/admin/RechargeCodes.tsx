@@ -138,13 +138,13 @@ export default function RechargeCodesPage() {
             {/* 页面标题 */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">充值卡密管理</h1>
-                    <p className="text-slate-400 mt-1">生成和管理用户充值卡密</p>
+                    <h1 className="text-2xl font-bold text-slate-900">充值卡密管理</h1>
+                    <p className="text-slate-500 mt-1">生成和管理用户充值卡密</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <button
                         onClick={() => refetch()}
-                        className="p-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                        className="p-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition shadow-sm"
                         title="刷新"
                     >
                         <RefreshCw className="w-4 h-4" />
@@ -168,7 +168,7 @@ export default function RechargeCodesPage() {
                     onClick={() => { setUsedFilter(null); setPage(1); }}
                     className={`px-4 py-2 rounded-lg text-sm transition ${usedFilter === null
                         ? 'bg-primary text-white'
-                        : 'bg-slate-800 text-slate-400 hover:text-white'
+                        : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                         }`}
                 >
                     全部
@@ -177,7 +177,7 @@ export default function RechargeCodesPage() {
                     onClick={() => { setUsedFilter(false); setPage(1); }}
                     className={`px-4 py-2 rounded-lg text-sm transition ${usedFilter === false
                         ? 'bg-primary text-white'
-                        : 'bg-slate-800 text-slate-400 hover:text-white'
+                        : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                         }`}
                 >
                     未使用
@@ -186,7 +186,7 @@ export default function RechargeCodesPage() {
                     onClick={() => { setUsedFilter(true); setPage(1); }}
                     className={`px-4 py-2 rounded-lg text-sm transition ${usedFilter === true
                         ? 'bg-primary text-white'
-                        : 'bg-slate-800 text-slate-400 hover:text-white'
+                        : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                         }`}
                 >
                     已使用
@@ -194,7 +194,7 @@ export default function RechargeCodesPage() {
             </div>
 
             {/* 卡密列表 */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
+            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
@@ -224,19 +224,19 @@ export default function RechargeCodesPage() {
                                 </tr>
                             ) : (
                                 codes.map((code) => (
-                                    <tr key={code.id} className="hover:bg-slate-800/50 transition">
+                                    <tr key={code.id} className="hover:bg-slate-50 transition">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2">
-                                                <span className="font-mono text-white">{code.code}</span>
+                                                <span className="font-mono text-slate-900">{code.code}</span>
                                                 <button
                                                     onClick={() => handleCopy(code.code, code.id)}
-                                                    className="p-1 hover:bg-slate-700 rounded transition"
+                                                    className="p-1 hover:bg-slate-100 rounded transition"
                                                     title="复制"
                                                 >
                                                     {copiedId === code.id ? (
                                                         <Check className="w-4 h-4 text-green-400" />
                                                     ) : (
-                                                        <Copy className="w-4 h-4 text-slate-400" />
+                                                        <Copy className="w-4 h-4 text-slate-500" />
                                                     )}
                                                 </button>
                                             </div>
@@ -255,10 +255,10 @@ export default function RechargeCodesPage() {
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4 text-slate-400 text-sm">
+                                        <td className="px-6 py-4 text-slate-600 text-sm">
                                             {code.remark || '-'}
                                         </td>
-                                        <td className="px-6 py-4 text-slate-400 text-sm">
+                                        <td className="px-6 py-4 text-slate-600 text-sm">
                                             {formatDate(code.created_at)}
                                         </td>
                                         <td className="px-6 py-4">
@@ -282,21 +282,21 @@ export default function RechargeCodesPage() {
 
                 {/* 分页 */}
                 {totalPages > 1 && (
-                    <div className="px-6 py-4 border-t border-slate-800 flex items-center justify-between">
-                        <p className="text-sm text-slate-400">共 {total} 条记录</p>
+                    <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between">
+                        <p className="text-sm text-slate-500">共 {total} 条记录</p>
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => setPage(p => Math.max(1, p - 1))}
                                 disabled={page === 1}
-                                className="p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition disabled:opacity-50"
+                                className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition disabled:opacity-50"
                             >
                                 <ChevronLeft className="w-4 h-4" />
                             </button>
-                            <span className="text-sm text-slate-400">{page} / {totalPages}</span>
+                            <span className="text-sm text-slate-500">{page} / {totalPages}</span>
                             <button
                                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                                 disabled={page === totalPages}
-                                className="p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition disabled:opacity-50"
+                                className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition disabled:opacity-50"
                             >
                                 <ChevronRight className="w-4 h-4" />
                             </button>
@@ -308,9 +308,9 @@ export default function RechargeCodesPage() {
             {/* 生成卡密弹窗 */}
             {showCreateModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-md">
-                        <div className="p-6 border-b border-slate-800">
-                            <h3 className="text-lg font-semibold text-white">批量生成卡密</h3>
+                    <div className="bg-white border border-slate-200 rounded-xl w-full max-w-md shadow-xl">
+                        <div className="p-6 border-b border-slate-200">
+                            <h3 className="text-lg font-semibold text-slate-900">批量生成卡密</h3>
                         </div>
 
                         <div className="p-6 space-y-4">
@@ -323,10 +323,10 @@ export default function RechargeCodesPage() {
                                         </p>
                                     </div>
 
-                                    <div className="bg-slate-800 rounded-lg p-4 max-h-60 overflow-y-auto">
+                                    <div className="bg-slate-100 rounded-lg p-4 max-h-60 overflow-y-auto">
                                         <div className="space-y-2">
                                             {createdCodes.map((code, index) => (
-                                                <div key={index} className="font-mono text-sm text-white">
+                                                <div key={index} className="font-mono text-sm text-slate-900">
                                                     {code}
                                                 </div>
                                             ))}
@@ -345,14 +345,14 @@ export default function RechargeCodesPage() {
                                 // 生成表单
                                 <>
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">
                                             面额（元）
                                         </label>
                                         <input
                                             type="number"
                                             value={createAmount}
                                             onChange={(e) => setCreateAmount(e.target.value)}
-                                            className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                             placeholder="10"
                                             min="1"
                                             step="0.01"
@@ -360,14 +360,14 @@ export default function RechargeCodesPage() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">
                                             生成数量
                                         </label>
                                         <input
                                             type="number"
                                             value={createCount}
                                             onChange={(e) => setCreateCount(e.target.value)}
-                                            className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                             placeholder="10"
                                             min="1"
                                             max="100"
@@ -375,14 +375,14 @@ export default function RechargeCodesPage() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">
                                             备注（可选）
                                         </label>
                                         <input
                                             type="text"
                                             value={createRemark}
                                             onChange={(e) => setCreateRemark(e.target.value)}
-                                            className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                             placeholder="如：促销活动"
                                         />
                                     </div>
@@ -390,13 +390,13 @@ export default function RechargeCodesPage() {
                             )}
                         </div>
 
-                        <div className="p-6 border-t border-slate-800 flex gap-3">
+                        <div className="p-6 border-t border-slate-200 flex gap-3">
                             <button
                                 onClick={() => {
                                     setShowCreateModal(false);
                                     setCreatedCodes([]);
                                 }}
-                                className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                                className="flex-1 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition"
                             >
                                 关闭
                             </button>

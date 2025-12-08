@@ -160,8 +160,8 @@ export default function PlansPage() {
             {/* 页面标题 */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">套餐管理</h1>
-                    <p className="text-slate-400 mt-1">管理订阅套餐和定价</p>
+                    <h1 className="text-2xl font-bold text-slate-900">套餐管理</h1>
+                    <p className="text-slate-500 mt-1">管理订阅套餐和定价</p>
                 </div>
                 <button
                     onClick={handleCreate}
@@ -176,7 +176,7 @@ export default function PlansPage() {
             <div className="flex items-center justify-end gap-4">
                 <button
                     onClick={() => refetch()}
-                    className="p-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                    className="p-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition shadow-sm"
                     title="刷新"
                 >
                     <RefreshCw className="w-4 h-4" />
@@ -204,14 +204,14 @@ export default function PlansPage() {
                     plans.map((plan) => (
                         <div
                             key={plan.id}
-                            className={`bg-slate-900/50 border rounded-xl p-5 transition ${plan.hidden ? 'border-slate-800/50 opacity-60' : 'border-slate-800 hover:border-primary/50'
+                            className={`bg-white border rounded-xl p-5 transition shadow-sm ${plan.hidden ? 'border-slate-200 opacity-60' : 'border-slate-200 hover:border-primary/50'
                                 }`}
                         >
                             {/* 套餐头部 */}
                             <div className="flex items-start justify-between mb-4">
                                 <div>
                                     <div className="flex items-center gap-2">
-                                        <h3 className="font-semibold text-white">{plan.name}</h3>
+                                        <h3 className="font-semibold text-slate-900">{plan.name}</h3>
                                         {plan.hidden && (
                                             <span className="flex items-center gap-1 px-2 py-0.5 text-xs bg-slate-700 text-slate-400 rounded">
                                                 <EyeOff className="w-3 h-3" />
@@ -227,7 +227,7 @@ export default function PlansPage() {
 
                             {/* 价格 */}
                             <div className="mb-4">
-                                <span className="text-3xl font-bold text-white">¥{plan.price}</span>
+                                <span className="text-3xl font-bold text-slate-900">¥{plan.price}</span>
                                 <span className="text-slate-500">/{plan.duration}天</span>
                             </div>
 
@@ -235,17 +235,17 @@ export default function PlansPage() {
                             <div className="space-y-2 mb-4 text-sm">
                                 <div className="flex justify-between">
                                     <span className="text-slate-400">流量</span>
-                                    <span className="text-white">{formatTraffic(plan.transfer)}</span>
+                                    <span className="text-slate-900">{formatTraffic(plan.transfer)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-slate-400">速度限制</span>
-                                    <span className="text-white">
+                                    <span className="text-slate-900">
                                         {plan.speed_limit > 0 ? `${plan.speed_limit} Mbps` : '无限制'}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-slate-400">设备数</span>
-                                    <span className="text-white">
+                                    <span className="text-slate-900">
                                         {plan.device_limit > 0 ? `${plan.device_limit} 台` : '无限制'}
                                     </span>
                                 </div>
@@ -255,14 +255,14 @@ export default function PlansPage() {
                             <div className="flex items-center gap-2 pt-4 border-t border-slate-800">
                                 <button
                                     onClick={() => handleEdit(plan)}
-                                    className="flex-1 flex items-center justify-center gap-2 py-2 text-sm bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                                    className="flex-1 flex items-center justify-center gap-2 py-2 text-sm bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition"
                                 >
                                     <Edit className="w-4 h-4" />
                                     编辑
                                 </button>
                                 <button
                                     onClick={() => handleDelete(plan)}
-                                    className="p-2 bg-slate-800 hover:bg-red-600 text-white rounded-lg transition"
+                                    className="p-2 bg-white border border-slate-200 hover:bg-red-50 text-red-600 hover:border-red-200 rounded-lg transition"
                                     title="删除"
                                 >
                                     <Trash2 className="w-4 h-4" />
@@ -276,15 +276,15 @@ export default function PlansPage() {
             {/* 添加/编辑模态框 */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                    <div className="bg-white border border-slate-200 rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-xl">
                         {/* 模态框头部 */}
                         <div className="flex items-center justify-between p-6 border-b border-slate-800">
-                            <h3 className="text-lg font-semibold text-white">
+                            <h3 className="text-lg font-semibold text-slate-900">
                                 {editingPlan ? '编辑套餐' : '添加套餐'}
                             </h3>
                             <button
                                 onClick={handleCloseModal}
-                                className="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400 hover:text-white"
+                                className="p-2 hover:bg-slate-100 rounded-lg transition text-slate-500 hover:text-slate-900"
                             >
                                 <X className="w-5 h-5" />
                             </button>
@@ -302,21 +302,21 @@ export default function PlansPage() {
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     required
-                                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     placeholder="例如: 月度套餐"
                                 />
                             </div>
 
                             {/* 描述 */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
                                     描述
                                 </label>
                                 <textarea
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     rows={3}
-                                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary resize-none"
+                                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary resize-none"
                                     placeholder="套餐描述信息"
                                 />
                             </div>
@@ -324,7 +324,7 @@ export default function PlansPage() {
                             {/* 价格和时长 */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         价格 (元) <span className="text-red-400">*</span>
                                     </label>
                                     <input
@@ -334,11 +334,11 @@ export default function PlansPage() {
                                         required
                                         min={0}
                                         step={0.01}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         时长 (天) <span className="text-red-400">*</span>
                                     </label>
                                     <input
@@ -347,7 +347,7 @@ export default function PlansPage() {
                                         onChange={(e) => setFormData({ ...formData, duration: Number(e.target.value) })}
                                         required
                                         min={1}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                             </div>
@@ -355,7 +355,7 @@ export default function PlansPage() {
                             {/* 流量和速度限制 */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         流量 (GB) <span className="text-red-400">*</span>
                                     </label>
                                     <input
@@ -364,11 +364,11 @@ export default function PlansPage() {
                                         onChange={(e) => setFormData({ ...formData, transfer: Number(e.target.value) })}
                                         required
                                         min={0}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         速度限制 (Mbps)
                                     </label>
                                     <input
@@ -377,7 +377,7 @@ export default function PlansPage() {
                                         onChange={(e) => setFormData({ ...formData, speed_limit: Number(e.target.value) })}
                                         min={0}
                                         placeholder="0 表示不限制"
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                             </div>
@@ -385,7 +385,7 @@ export default function PlansPage() {
                             {/* 设备数和排序 */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         设备限制
                                     </label>
                                     <input
@@ -394,11 +394,11 @@ export default function PlansPage() {
                                         onChange={(e) => setFormData({ ...formData, device_limit: Number(e.target.value) })}
                                         min={0}
                                         placeholder="0 表示不限制"
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         排序权重
                                     </label>
                                     <input
@@ -406,7 +406,7 @@ export default function PlansPage() {
                                         value={formData.sort}
                                         onChange={(e) => setFormData({ ...formData, sort: Number(e.target.value) })}
                                         min={0}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                             </div>
@@ -433,7 +433,7 @@ export default function PlansPage() {
                                 <button
                                     type="button"
                                     onClick={handleCloseModal}
-                                    className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                                    className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition"
                                 >
                                     取消
                                 </button>

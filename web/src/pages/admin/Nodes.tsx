@@ -173,8 +173,8 @@ export default function NodesPage() {
             {/* 页面标题 */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">节点管理</h1>
-                    <p className="text-slate-400 mt-1">管理 NodePass Master 节点</p>
+                    <h1 className="text-2xl font-bold text-slate-900">节点管理</h1>
+                    <p className="text-slate-500 mt-1">管理 NodePass Master 节点</p>
                 </div>
                 <button
                     onClick={handleCreate}
@@ -194,12 +194,12 @@ export default function NodesPage() {
                         placeholder="搜索节点名称..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-primary"
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-primary"
                     />
                 </div>
                 <button
                     onClick={() => refetch()}
-                    className="p-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                    className="p-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition shadow-sm"
                     title="刷新"
                 >
                     <RefreshCw className="w-4 h-4" />
@@ -227,7 +227,7 @@ export default function NodesPage() {
                     nodes.map((node) => (
                         <div
                             key={node.id}
-                            className="bg-slate-900/50 border border-slate-800 rounded-xl p-5 hover:border-slate-700 transition"
+                            className="bg-white border border-slate-200 rounded-xl p-5 hover:border-primary/50 transition shadow-sm"
                         >
                             {/* 节点头部 */}
                             <div className="flex items-start justify-between mb-4">
@@ -290,13 +290,13 @@ export default function NodesPage() {
                                 <button
                                     onClick={() => refreshMutation.mutate(node.id)}
                                     disabled={refreshMutation.isPending}
-                                    className="flex-1 py-2 text-sm bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition disabled:opacity-50"
+                                    className="flex-1 py-2 text-sm bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition disabled:opacity-50"
                                 >
                                     刷新状态
                                 </button>
                                 <button
                                     onClick={() => handleEdit(node)}
-                                    className="p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                                    className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition"
                                 >
                                     <Edit className="w-4 h-4" />
                                 </button>
@@ -315,7 +315,7 @@ export default function NodesPage() {
             {/* 添加/编辑节点模态框 */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                    <div className="bg-white border border-slate-200 rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-xl">
                         {/* 模态框头部 */}
                         <div className="flex items-center justify-between p-6 border-b border-slate-800">
                             <h3 className="text-lg font-semibold text-white">
@@ -333,7 +333,7 @@ export default function NodesPage() {
                         <form onSubmit={handleSubmit} className="p-6 space-y-4">
                             {/* 节点名称 */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
                                     节点名称 <span className="text-red-400">*</span>
                                 </label>
                                 <input
@@ -341,7 +341,7 @@ export default function NodesPage() {
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     required
-                                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     placeholder="例如: 香港节点 01"
                                 />
                             </div>
@@ -349,7 +349,7 @@ export default function NodesPage() {
                             {/* 服务器地址和端口 */}
                             <div className="grid grid-cols-3 gap-4">
                                 <div className="col-span-2">
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         服务器地址 <span className="text-red-400">*</span>
                                     </label>
                                     <input
@@ -357,12 +357,12 @@ export default function NodesPage() {
                                         value={formData.address}
                                         onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                                         required
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                         placeholder="IP 或域名"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         API 端口 <span className="text-red-400">*</span>
                                     </label>
                                     <input
@@ -372,14 +372,14 @@ export default function NodesPage() {
                                         required
                                         min={1}
                                         max={65535}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                             </div>
 
                             {/* API Token */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
                                     API Token <span className="text-red-400">*</span>
                                 </label>
                                 <input
@@ -387,7 +387,7 @@ export default function NodesPage() {
                                     value={formData.token}
                                     onChange={(e) => setFormData({ ...formData, token: e.target.value })}
                                     required
-                                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white font-mono text-sm focus:outline-none focus:border-primary"
+                                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 font-mono text-sm focus:outline-none focus:border-primary"
                                     placeholder="NodePass Master API Token"
                                 />
                             </div>
@@ -395,38 +395,38 @@ export default function NodesPage() {
                             {/* 地区信息 */}
                             <div className="grid grid-cols-3 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         地区
                                     </label>
                                     <input
                                         type="text"
                                         value={formData.region}
                                         onChange={(e) => setFormData({ ...formData, region: e.target.value })}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                         placeholder="亚洲"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         国家
                                     </label>
                                     <input
                                         type="text"
                                         value={formData.country}
                                         onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                         placeholder="香港"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         运营商
                                     </label>
                                     <input
                                         type="text"
                                         value={formData.carrier}
                                         onChange={(e) => setFormData({ ...formData, carrier: e.target.value })}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                         placeholder="BGP"
                                     />
                                 </div>
@@ -435,7 +435,7 @@ export default function NodesPage() {
                             {/* 倍率和分组 */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         流量倍率
                                     </label>
                                     <input
@@ -444,11 +444,11 @@ export default function NodesPage() {
                                         onChange={(e) => setFormData({ ...formData, rate: Number(e.target.value) })}
                                         min={0.1}
                                         step={0.1}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         用户组 ID
                                     </label>
                                     <input
@@ -457,7 +457,7 @@ export default function NodesPage() {
                                         onChange={(e) => setFormData({ ...formData, group_id: Number(e.target.value) })}
                                         min={0}
                                         placeholder="0 表示所有用户"
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     />
                                 </div>
                             </div>

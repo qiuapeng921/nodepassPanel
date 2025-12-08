@@ -118,12 +118,12 @@ export default function UserSettingsPage() {
             {/* 页面标题 */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">个人设置</h1>
-                    <p className="text-slate-400 mt-1">管理您的账户信息和安全设置</p>
+                    <h1 className="text-2xl font-bold text-slate-900">个人设置</h1>
+                    <p className="text-slate-500 mt-1">管理您的账户信息和安全设置</p>
                 </div>
                 <button
                     onClick={() => refetch()}
-                    className="p-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                    className="p-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition shadow-sm"
                     title="刷新"
                 >
                     <RefreshCw className="w-4 h-4" />
@@ -131,11 +131,11 @@ export default function UserSettingsPage() {
             </div>
 
             {/* 账户信息 */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-800">
+            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div className="px-6 py-4 border-b border-slate-200">
                     <div className="flex items-center gap-3">
                         <User className="w-5 h-5 text-primary" />
-                        <h2 className="text-lg font-semibold text-white">账户信息</h2>
+                        <h2 className="text-lg font-semibold text-slate-900">账户信息</h2>
                     </div>
                 </div>
 
@@ -144,17 +144,17 @@ export default function UserSettingsPage() {
                         <div className="text-slate-500">加载中...</div>
                     ) : (
                         <>
-                            <div className="flex items-center justify-between py-3 border-b border-slate-800">
+                            <div className="flex items-center justify-between py-3 border-b border-slate-200">
                                 <div>
                                     <p className="text-sm text-slate-400">邮箱地址</p>
-                                    <p className="text-white font-medium">{profile?.email}</p>
+                                    <p className="text-slate-900 font-medium">{profile?.email}</p>
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between py-3 border-b border-slate-800">
+                            <div className="flex items-center justify-between py-3 border-b border-slate-200">
                                 <div>
                                     <p className="text-sm text-slate-400">账户余额</p>
-                                    <p className="text-white font-medium">¥{(profile?.balance || 0).toFixed(2)}</p>
+                                    <p className="text-slate-900 font-medium">¥{(profile?.balance || 0).toFixed(2)}</p>
                                 </div>
                                 <button
                                     className="px-4 py-2 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition text-sm"
@@ -167,7 +167,7 @@ export default function UserSettingsPage() {
                             <div className="flex items-center justify-between py-3">
                                 <div>
                                     <p className="text-sm text-slate-400">注册时间</p>
-                                    <p className="text-white font-medium">
+                                    <p className="text-slate-900 font-medium">
                                         {profile?.created_at
                                             ? new Date(profile.created_at).toLocaleDateString('zh-CN')
                                             : '-'
@@ -181,11 +181,11 @@ export default function UserSettingsPage() {
             </div>
 
             {/* 订阅管理 */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-800">
+            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div className="px-6 py-4 border-b border-slate-200">
                     <div className="flex items-center gap-3">
                         <Key className="w-5 h-5 text-primary" />
-                        <h2 className="text-lg font-semibold text-white">订阅管理</h2>
+                        <h2 className="text-lg font-semibold text-slate-900">订阅管理</h2>
                     </div>
                 </div>
 
@@ -193,12 +193,12 @@ export default function UserSettingsPage() {
                     <div>
                         <p className="text-sm text-slate-400 mb-2">订阅令牌</p>
                         <div className="flex items-center gap-2">
-                            <div className="flex-1 px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg font-mono text-sm text-white truncate">
+                            <div className="flex-1 px-4 py-2.5 bg-white border border-slate-200 rounded-lg font-mono text-sm text-slate-900 truncate">
                                 {profile?.subscribe_token || '...'}
                             </div>
                             <button
                                 onClick={handleCopySubscribe}
-                                className="p-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition"
+                                className="p-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition"
                                 title="复制订阅链接"
                             >
                                 {copied ? (
@@ -210,9 +210,9 @@ export default function UserSettingsPage() {
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+                    <div className="flex items-center justify-between pt-4 border-t border-slate-200">
                         <div>
-                            <p className="text-sm text-white font-medium">重置订阅令牌</p>
+                            <p className="text-sm text-slate-900 font-medium">重置订阅令牌</p>
                             <p className="text-xs text-slate-500">重置后需要重新导入订阅链接</p>
                         </div>
                         <button
@@ -227,11 +227,11 @@ export default function UserSettingsPage() {
             </div>
 
             {/* 修改密码 */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-800">
+            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div className="px-6 py-4 border-b border-slate-200">
                     <div className="flex items-center gap-3">
                         <Lock className="w-5 h-5 text-primary" />
-                        <h2 className="text-lg font-semibold text-white">修改密码</h2>
+                        <h2 className="text-lg font-semibold text-slate-900">修改密码</h2>
                     </div>
                 </div>
 
@@ -253,7 +253,7 @@ export default function UserSettingsPage() {
                     )}
 
                     <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
                             当前密码
                         </label>
                         <div className="relative">
@@ -262,13 +262,13 @@ export default function UserSettingsPage() {
                                 value={currentPassword}
                                 onChange={(e) => setCurrentPassword(e.target.value)}
                                 required
-                                className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary pr-10"
+                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary pr-10"
                                 placeholder="输入当前密码"
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                             >
                                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
@@ -285,7 +285,7 @@ export default function UserSettingsPage() {
                             onChange={(e) => setNewPassword(e.target.value)}
                             required
                             minLength={6}
-                            className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                             placeholder="至少6位字符"
                         />
                     </div>
@@ -299,7 +299,7 @@ export default function UserSettingsPage() {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
-                            className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                             placeholder="再次输入新密码"
                         />
                     </div>

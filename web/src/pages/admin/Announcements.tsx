@@ -152,8 +152,8 @@ export default function AnnouncementsPage() {
             {/* 页面标题 */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">公告管理</h1>
-                    <p className="text-slate-400 mt-1">管理系统公告和通知</p>
+                    <h1 className="text-2xl font-bold text-slate-900">公告管理</h1>
+                    <p className="text-slate-500 mt-1">管理系统公告和通知</p>
                 </div>
                 <button
                     onClick={handleCreate}
@@ -264,15 +264,15 @@ export default function AnnouncementsPage() {
             {/* 添加/编辑模态框 */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <div className="bg-white border border-slate-200 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
                         {/* 模态框头部 */}
-                        <div className="flex items-center justify-between p-6 border-b border-slate-800">
-                            <h3 className="text-lg font-semibold text-white">
+                        <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                            <h3 className="text-lg font-semibold text-slate-900">
                                 {editingAnn ? '编辑公告' : '发布公告'}
                             </h3>
                             <button
                                 onClick={handleCloseModal}
-                                className="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400 hover:text-white"
+                                className="p-2 hover:bg-slate-100 rounded-lg transition text-slate-500 hover:text-slate-900"
                             >
                                 <X className="w-5 h-5" />
                             </button>
@@ -282,7 +282,7 @@ export default function AnnouncementsPage() {
                         <form onSubmit={handleSubmit} className="p-6 space-y-4">
                             {/* 标题 */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
                                     标题 <span className="text-red-400">*</span>
                                 </label>
                                 <input
@@ -290,14 +290,14 @@ export default function AnnouncementsPage() {
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                     required
-                                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                     placeholder="公告标题"
                                 />
                             </div>
 
                             {/* 内容 */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
                                     内容 <span className="text-red-400">*</span>
                                 </label>
                                 <textarea
@@ -305,7 +305,7 @@ export default function AnnouncementsPage() {
                                     onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                                     required
                                     rows={8}
-                                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary resize-none"
+                                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary resize-none"
                                     placeholder="支持 Markdown 格式"
                                 />
                             </div>
@@ -313,19 +313,19 @@ export default function AnnouncementsPage() {
                             {/* 标签和优先级 */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         标签
                                     </label>
                                     <input
                                         type="text"
                                         value={formData.tags}
                                         onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                         placeholder="多个标签用逗号分隔"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         优先级
                                     </label>
                                     <input
@@ -333,7 +333,7 @@ export default function AnnouncementsPage() {
                                         value={formData.priority}
                                         onChange={(e) => setFormData({ ...formData, priority: Number(e.target.value) })}
                                         min={0}
-                                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
                                         placeholder="数值越大越靠前"
                                     />
                                 </div>
