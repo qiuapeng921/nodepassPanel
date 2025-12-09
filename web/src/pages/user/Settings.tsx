@@ -18,7 +18,6 @@ interface UserProfile {
     id: number;
     email: string;
     balance: number;
-    subscribe_token: string;
     created_at: string;
 }
 
@@ -28,7 +27,6 @@ export default function UserSettingsPage() {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [copied, setCopied] = useState(false);
     const [saving, setSaving] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const [passwordSuccess, setPasswordSuccess] = useState(false);
@@ -57,27 +55,11 @@ export default function UserSettingsPage() {
         },
     });
 
-    // 重置订阅令牌
-    const resetTokenMutation = useMutation({
-        mutationFn: () => api.post('/user/subscribe/reset'),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-        },
-    });
+
 
     const profile = profileData?.data;
 
-    // 复制订阅链接
-    const handleCopySubscribe = async () => {
-        const subscribeUrl = `${window.location.origin}/api/v1/client/subscribe/${profile?.subscribe_token || ''}`;
-        try {
-            await navigator.clipboard.writeText(subscribeUrl);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch (error) {
-            console.error('复制失败:', error);
-        }
-    };
+
 
     // 处理密码修改
     const handleChangePassword = async (e: React.FormEvent) => {
@@ -106,12 +88,7 @@ export default function UserSettingsPage() {
         }
     };
 
-    // 重置订阅令牌
-    const handleResetToken = () => {
-        if (confirm('重置订阅令牌后，当前的订阅链接将失效，需要重新导入到客户端。确定继续吗？')) {
-            resetTokenMutation.mutate();
-        }
-    };
+
 
     return (
         <div className="space-y-6">
@@ -180,51 +157,6 @@ export default function UserSettingsPage() {
                 </div>
             </div>
 
-            {/* 订阅管理 */}
-            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                <div className="px-6 py-4 border-b border-slate-200">
-                    <div className="flex items-center gap-3">
-                        <Key className="w-5 h-5 text-primary" />
-                        <h2 className="text-lg font-semibold text-slate-900">订阅管理</h2>
-                    </div>
-                </div>
-
-                <div className="p-6 space-y-4">
-                    <div>
-                        <p className="text-sm text-slate-400 mb-2">订阅令牌</p>
-                        <div className="flex items-center gap-2">
-                            <div className="flex-1 px-4 py-2.5 bg-white border border-slate-200 rounded-lg font-mono text-sm text-slate-900 truncate">
-                                {profile?.subscribe_token || '...'}
-                            </div>
-                            <button
-                                onClick={handleCopySubscribe}
-                                className="p-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition"
-                                title="复制订阅链接"
-                            >
-                                {copied ? (
-                                    <Check className="w-4 h-4 text-green-400" />
-                                ) : (
-                                    <Copy className="w-4 h-4" />
-                                )}
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center justify-between pt-4 border-t border-slate-200">
-                        <div>
-                            <p className="text-sm text-slate-900 font-medium">重置订阅令牌</p>
-                            <p className="text-xs text-slate-500">重置后需要重新导入订阅链接</p>
-                        </div>
-                        <button
-                            onClick={handleResetToken}
-                            disabled={resetTokenMutation.isPending}
-                            className="px-4 py-2 bg-orange-600/20 hover:bg-orange-600/30 text-orange-400 rounded-lg transition text-sm disabled:opacity-50"
-                        >
-                            {resetTokenMutation.isPending ? '重置中...' : '重置令牌'}
-                        </button>
-                    </div>
-                </div>
-            </div>
 
             {/* 修改密码 */}
             <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">

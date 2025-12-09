@@ -94,27 +94,6 @@ func (h *UserHandler) GetTrafficStats(c *gin.Context) {
 	response.Success(c, stats)
 }
 
-// ResetSubscribeToken 重置订阅令牌
-// @Summary 重置订阅令牌
-// @Tags User
-// @Success 200 {object} response.Response
-// @Router /api/v1/user/subscribe/reset [post]
-func (h *UserHandler) ResetSubscribeToken(c *gin.Context) {
-	userID := middleware.GetUserID(c)
-	if userID == 0 {
-		response.Error(c, http.StatusUnauthorized, "unauthorized")
-		return
-	}
-
-	newToken, err := h.userService.ResetSubscribeToken(userID)
-	if err != nil {
-		response.Fail(c, err.Error())
-		return
-	}
-
-	response.Success(c, gin.H{"token": newToken})
-}
-
 // ==================== 管理员接口 ====================
 
 // AdminList 获取用户列表

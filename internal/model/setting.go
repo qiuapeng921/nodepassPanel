@@ -31,9 +31,6 @@ const (
 
 	// 邀请系统
 	SettingKeyInviteRewardDays = "invite_reward_days" // 邀请奖励天数
-
-	// 订阅设置
-	SettingKeySubscribeDomain = "subscribe_domain" // 订阅域名
 )
 
 // 设置分组常量

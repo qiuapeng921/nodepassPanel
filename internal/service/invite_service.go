@@ -5,11 +5,7 @@ import (
 	"nodepassPanel/internal/config"
 	"nodepassPanel/internal/global"
 	"nodepassPanel/internal/model"
-	"nodepassPanel/pkg/logger"
-	"nodepassPanel/pkg/utils"
-	"time"
 
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -140,7 +136,6 @@ func (s *InviteService) ProcessInviteCommission(inviteeID uint, orderAmount floa
 	}
 
 	if err := global.DB.Create(record).Error; err != nil {
-		logger.Log.Error("创建邀请记录失败", zap.Error(err))
 		return err
 	}
 
@@ -210,124 +205,4 @@ func (s *InviteService) maskEmail(email string) string {
 		return email
 	}
 	return email[:2] + "***" + email[atIndex:]
-}
-
-// ============ 充值服务 ============
-
-// RechargeService 充值服务
-type RechargeService struct{}
-
-// NewRechargeService 创建充值服务实例
-func NewRechargeService() *RechargeService {
-	return &RechargeService{}
-}
-
-// RechargeByCodeRequest 卡密充值请求
-type RechargeByCodeRequest struct {
-	Code string `json:"code" binding:"required"`
-}
-
-// RechargeByCode 使用卡密充值
-func (s *RechargeService) RechargeByCode(userID uint, code string) (float64, error) {
-	// 查找卡密
-	var rechargeCode model.RechargeCode
-	if err := global.DB.Where("code = ? AND used = ?", code, false).First(&rechargeCode).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return 0, errors.New("充值卡密无效或已使用")
-		}
-		return 0, err
-	}
-
-	// 开始事务
-	tx := global.DB.Begin()
-
-	// 标记卡密为已使用
-	usedAt := time.Now().Format("2006-01-02 15:04:05")
-	rechargeCode.Used = true
-	rechargeCode.UsedBy = userID
-	rechargeCode.UsedAt = &usedAt
-	if err := tx.Save(&rechargeCode).Error; err != nil {
-		tx.Rollback()
-		return 0, err
-	}
-
-	// 给用户增加余额
-	if err := tx.Model(&model.User{}).Where("id = ?", userID).
-		Update("balance", gorm.Expr("balance + ?", rechargeCode.Amount)).Error; err != nil {
-		tx.Rollback()
-		return 0, err
-	}
-
-	tx.Commit()
-
-	logger.Log.Info("用户充值成功",
-		zap.Uint("user_id", userID),
-		zap.String("code", code),
-		zap.Float64("amount", rechargeCode.Amount))
-
-	return rechargeCode.Amount, nil
-}
-
-// CreateRechargeCodeRequest 创建充值卡密请求（管理员）
-type CreateRechargeCodeRequest struct {
-	Amount float64 `json:"amount" binding:"required,gt=0"`
-	Count  int     `json:"count" binding:"required,min=1,max=100"`
-	Remark string  `json:"remark"`
-}
-
-// CreateRechargeCodes 批量创建充值卡密（管理员）
-func (s *RechargeService) CreateRechargeCodes(req *CreateRechargeCodeRequest, creatorID uint) ([]string, error) {
-	codes := make([]string, 0, req.Count)
-
-	for i := 0; i < req.Count; i++ {
-		code := utils.GenerateUUID()[:16] // 16位卡密
-
-		rechargeCode := &model.RechargeCode{
-			Code:      code,
-			Amount:    req.Amount,
-			Used:      false,
-			Remark:    req.Remark,
-			CreatedBy: creatorID,
-		}
-
-		if err := global.DB.Create(rechargeCode).Error; err != nil {
-			logger.Log.Error("创建充值卡密失败", zap.Error(err))
-			continue
-		}
-
-		codes = append(codes, code)
-	}
-
-	return codes, nil
-}
-
-// GetRechargeCodes 获取充值卡密列表（管理员）
-func (s *RechargeService) GetRechargeCodes(page, pageSize int, used *bool) ([]model.RechargeCode, int64, error) {
-	var total int64
-	query := global.DB.Model(&model.RechargeCode{})
-
-	if used != nil {
-		query = query.Where("used = ?", *used)
-	}
-
-	query.Count(&total)
-
-	var codes []model.RechargeCode
-	if err := query.Order("created_at DESC").
-		Offset((page - 1) * pageSize).
-		Limit(pageSize).
-		Find(&codes).Error; err != nil {
-		return nil, 0, err
-	}
-
-	return codes, total, nil
-}
-
-// DeleteRechargeCode 删除充值卡密（管理员，仅未使用的可删除）
-func (s *RechargeService) DeleteRechargeCode(id uint) error {
-	result := global.DB.Where("id = ? AND used = ?", id, false).Delete(&model.RechargeCode{})
-	if result.RowsAffected == 0 {
-		return errors.New("卡密不存在或已被使用")
-	}
-	return nil
 }

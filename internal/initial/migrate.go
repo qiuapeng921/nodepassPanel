@@ -23,7 +23,6 @@ func AutoMigrate(db *gorm.DB) error {
 		&model.Coupon{},
 		&model.Setting{},
 		&model.VerifyCode{},
-		&model.RechargeCode{},
 		&model.InviteRecord{},
 	)
 

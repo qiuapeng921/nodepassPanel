@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"nodepassPanel/internal/config"
@@ -60,7 +61,7 @@ func main() {
 	}
 	defer logger.Log.Sync()
 
-	logger.Log.Info("Starting NyanPass Panel", zap.String("version", "0.0.1-alpha"))
+	logger.Log.Info("Starting NodePass Panel", zap.String("version", "0.0.1-alpha"))
 
 	// 3. 初始化数据库 (允许失败，方便暂无 DB 环境时的测试)
 	db, err := initial.InitDB(config.App.Database)
@@ -102,7 +103,7 @@ func main() {
 
 	go func() {
 		logger.Log.Info("Server is starting", zap.String("port", config.App.Server.Port))
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			logger.Log.Fatal("Server start failed", zap.Error(err))
 		}
 	}()

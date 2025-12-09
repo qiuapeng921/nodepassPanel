@@ -41,7 +41,6 @@ func InitRouter() *gin.Engine {
 
 	// API 路由组
 	api := r.Group("/api/v1")
-
 	{
 		// ==================== 公开路由 ====================
 		// 认证
@@ -76,11 +75,6 @@ func InitRouter() *gin.Engine {
 		wsHandler := handler.NewWSHandler()
 		api.GET("/ws", wsHandler.Connect)
 
-		// ==================== 订阅路由 (依靠 Token 验证) ====================
-
-		subHandler := handler.NewSubscribeHandler()
-		api.GET("/client/subscribe/:token", subHandler.Subscribe)
-
 		// ==================== 需要登录的路由 ====================
 		user := api.Group("/user")
 		user.Use(middleware.JWTAuth())
@@ -90,7 +84,6 @@ func InitRouter() *gin.Engine {
 			user.GET("/profile", userHandler.GetProfile)
 			user.PUT("/password", userHandler.ChangePassword)
 			user.GET("/traffic", userHandler.GetTrafficStats)
-			user.POST("/subscribe/reset", userHandler.ResetSubscribeToken)
 
 			// 节点列表 (用户可见节点)
 			nodeHandler := handler.NewNodeHandler()
@@ -108,10 +101,8 @@ func InitRouter() *gin.Engine {
 			user.GET("/invite", inviteHandler.GetInviteInfo)
 			user.GET("/invite/records", inviteHandler.GetInviteRecords)
 
-			// 充值
-			// 充值
+			// 在线充值
 			rechargeHandler := handler.NewRechargeHandler()
-			user.POST("/recharge", rechargeHandler.RechargeByCode)
 			user.POST("/recharge/online", rechargeHandler.CreateOnlineRecharge)
 
 			// 优惠券
@@ -119,8 +110,6 @@ func InitRouter() *gin.Engine {
 			user.POST("/coupons/verify", couponHandler.Verify)
 
 			// 支付
-			// paymentHandler initialized above? No, it's local scope in public block.
-			// Re-initialize or move up? Re-initialize is fine (stateless).
 			payHandler := handler.NewPaymentHandler()
 			user.POST("/payment/pay", payHandler.Pay)
 		}
@@ -188,12 +177,6 @@ func InitRouter() *gin.Engine {
 			admin.POST("/orders/:id/paid", orderHandler.MarkPaid)
 			admin.POST("/orders/:id/refund", orderHandler.Refund)
 			admin.DELETE("/orders/:id", orderHandler.Delete)
-
-			// 充值卡密管理
-			rechargeHandler := handler.NewRechargeHandler()
-			admin.GET("/recharge/codes", rechargeHandler.GetRechargeCodes)
-			admin.POST("/recharge/codes", rechargeHandler.CreateRechargeCodes)
-			admin.DELETE("/recharge/codes/:id", rechargeHandler.DeleteRechargeCode)
 
 			// 优惠券管理
 			couponHandler := handler.NewCouponHandler()

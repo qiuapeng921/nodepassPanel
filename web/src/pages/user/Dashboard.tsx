@@ -1,19 +1,13 @@
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
     Activity,
     Clock,
     Zap,
     Server,
-    Copy,
-    Check,
-    QrCode,
-    ExternalLink,
     RefreshCw,
     ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { QRCodeSVG } from 'qrcode.react';
 import api from '../../lib/api';
 
 interface UserProfile {
@@ -24,7 +18,6 @@ interface UserProfile {
     download: number;
     transfer_enable: number;
     expired_at: string | null;
-    subscribe_token: string;
     group_id: number;
 }
 
@@ -66,22 +59,8 @@ function formatExpiredAt(expiredAt: string | null): { text: string; color: strin
     }
 }
 
-// 订阅协议配置
-const subscribeProtocols = [
-    { id: 'base64', name: 'Base64', icon: '📄', desc: '通用格式' },
-    { id: 'clash', name: 'Clash', icon: '⚡', desc: 'Clash/ClashX' },
-    { id: 'surge', name: 'Surge', icon: '🌊', desc: 'Surge 4/5' },
-    { id: 'shadowrocket', name: 'Shadowrocket', icon: '🚀', desc: 'iOS 小火箭' },
-    { id: 'v2rayn', name: 'V2RayN', icon: '✈️', desc: 'Windows 客户端' },
-    { id: 'singbox', name: 'Sing-box', icon: '📦', desc: '新一代客户端' },
-];
-
 // 用户仪表盘
 export default function UserDashboard() {
-    const [copiedId, setCopiedId] = useState<string | null>(null);
-    const [showQrModal, setShowQrModal] = useState(false);
-    const [selectedProtocol, setSelectedProtocol] = useState('base64');
-
     // 获取用户信息
     const { data: profileData, isLoading: loadingProfile, refetch: refetchProfile } = useQuery<{ data: UserProfile }>({
         queryKey: ['user-profile'],
@@ -103,25 +82,6 @@ export default function UserDashboard() {
     const totalTraffic = profile?.transfer_enable || 1;
     const usedPercent = Math.min(100, (usedTraffic / totalTraffic) * 100);
 
-    // 获取订阅链接
-    const getSubscribeUrl = (protocol: string) => {
-        const token = profile?.subscribe_token || '';
-        const baseUrl = `${window.location.origin}/api/v1/client/subscribe/${token}`;
-        if (protocol === 'base64') return baseUrl;
-        return `${baseUrl}?format=${protocol}`;
-    };
-
-    // 复制订阅链接
-    const handleCopy = async (protocol: string) => {
-        try {
-            await navigator.clipboard.writeText(getSubscribeUrl(protocol));
-            setCopiedId(protocol);
-            setTimeout(() => setCopiedId(null), 2000);
-        } catch (error) {
-            console.error('复制失败:', error);
-        }
-    };
-
     // 到期时间信息
     const expiredInfo = formatExpiredAt(profile?.expired_at || null);
 
@@ -131,7 +91,7 @@ export default function UserDashboard() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900">仪表盘</h1>
-                    <p className="text-slate-500 mt-1">查看您的使用情况和订阅信息</p>
+                    <p className="text-slate-500 mt-1">查看您的使用情况</p>
                 </div>
                 <button
                     onClick={() => refetchProfile()}
@@ -230,66 +190,6 @@ export default function UserDashboard() {
                 </div>
             </div>
 
-            {/* 订阅链接 */}
-            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-slate-900">订阅链接</h2>
-                    <button
-                        onClick={() => setShowQrModal(true)}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm rounded-lg transition"
-                    >
-                        <QrCode className="w-4 h-4" />
-                        <span>二维码</span>
-                    </button>
-                </div>
-
-                <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {subscribeProtocols.map((protocol) => (
-                        <div
-                            key={protocol.id}
-                            className="bg-slate-50 border border-slate-200 rounded-lg p-4 hover:border-primary/50 transition duration-200"
-                        >
-                            <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-xl">{protocol.icon}</span>
-                                    <div>
-                                        <p className="font-medium text-slate-900">{protocol.name}</p>
-                                        <p className="text-xs text-slate-500">{protocol.desc}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => handleCopy(protocol.id)}
-                                    className="flex-1 flex items-center justify-center gap-2 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 text-sm rounded-lg transition shadow-sm"
-                                >
-                                    {copiedId === protocol.id ? (
-                                        <>
-                                            <Check className="w-4 h-4 text-green-500" />
-                                            <span>已复制</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Copy className="w-4 h-4" />
-                                            <span>复制</span>
-                                        </>
-                                    )}
-                                </button>
-                                <a
-                                    href={getSubscribeUrl(protocol.id)}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition shadow-sm"
-                                    title="打开链接"
-                                >
-                                    <ExternalLink className="w-4 h-4" />
-                                </a>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
             {/* 节点列表预览 */}
             <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                 <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
@@ -337,77 +237,6 @@ export default function UserDashboard() {
                     </div>
                 )}
             </div>
-
-            {/* 二维码弹窗 */}
-            {showQrModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white border border-slate-200 rounded-xl w-full max-w-md shadow-xl">
-                        <div className="flex items-center justify-between p-6 border-b border-slate-100">
-                            <h3 className="text-lg font-semibold text-slate-900">订阅二维码</h3>
-                            <button
-                                onClick={() => setShowQrModal(false)}
-                                className="p-2 hover:bg-slate-100 rounded-lg transition text-slate-400 hover:text-slate-600"
-                            >
-                                ✕
-                            </button>
-                        </div>
-                        <div className="p-6">
-                            {/* 协议选择 */}
-                            <div className="flex flex-wrap gap-2 mb-6">
-                                {subscribeProtocols.map((protocol) => (
-                                    <button
-                                        key={protocol.id}
-                                        onClick={() => setSelectedProtocol(protocol.id)}
-                                        className={`px-3 py-1.5 text-sm rounded-lg transition ${selectedProtocol === protocol.id
-                                            ? 'bg-primary text-white shadow-md shadow-primary/25'
-                                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                                            }`}
-                                    >
-                                        {protocol.name}
-                                    </button>
-                                ))}
-                            </div>
-
-                            {/* 二维码 */}
-                            <div className="aspect-square bg-white rounded-xl flex items-center justify-center p-4 mb-4">
-                                <QRCodeSVG
-                                    value={getSubscribeUrl(selectedProtocol)}
-                                    size={200}
-                                    level="M"
-                                    includeMargin={true}
-                                    bgColor="#ffffff"
-                                    fgColor="#1f2937"
-                                />
-                            </div>
-
-                            {/* 订阅链接 */}
-                            <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
-                                <p className="text-xs text-slate-500 mb-2">订阅链接:</p>
-                                <p className="text-xs text-slate-600 break-all font-mono">
-                                    {getSubscribeUrl(selectedProtocol)}
-                                </p>
-                            </div>
-
-                            <button
-                                onClick={() => handleCopy(selectedProtocol)}
-                                className="w-full mt-4 flex items-center justify-center gap-2 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg transition"
-                            >
-                                {copiedId === selectedProtocol ? (
-                                    <>
-                                        <Check className="w-4 h-4" />
-                                        <span>已复制到剪贴板</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Copy className="w-4 h-4" />
-                                        <span>复制订阅链接</span>
-                                    </>
-                                )}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

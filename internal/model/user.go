@@ -2,15 +2,11 @@ package model
 
 import (
 	"time"
-
-	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 // User 用户模型
 type User struct {
 	Base
-	UUID     string `gorm:"type:varchar(36);uniqueIndex" json:"uuid"` // 订阅唯一标识 (SQLite兼容)
 	Email    string `gorm:"type:varchar(100);uniqueIndex;not null" json:"email"`
 	Password string `gorm:"type:varchar(255);not null" json:"-"`
 	Salt     string `gorm:"type:varchar(32)" json:"-"`
@@ -45,15 +41,4 @@ type User struct {
 // TableName 指定表名
 func (User) TableName() string {
 	return "users"
-}
-
-// BeforeCreate 钩子：生成 UUID 和 邀请码
-func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
-	if u.UUID == "" {
-		u.UUID = uuid.NewString()
-	}
-	if u.InviteCode == "" {
-		u.InviteCode = uuid.NewString()[:8] // 简单截取，实际应查重
-	}
-	return
 }

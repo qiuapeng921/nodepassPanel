@@ -25,7 +25,6 @@ func NewUserService() *UserService {
 // UserProfileResponse 用户个人信息响应
 type UserProfileResponse struct {
 	ID             uint       `json:"id"`
-	UUID           string     `json:"uuid"`
 	Email          string     `json:"email"`
 	Balance        float64    `json:"balance"`
 	Commission     float64    `json:"commission"`
@@ -96,7 +95,6 @@ func (s *UserService) GetProfile(userID uint) (*UserProfileResponse, error) {
 
 	return &UserProfileResponse{
 		ID:             user.ID,
-		UUID:           user.UUID,
 		Email:          user.Email,
 		Balance:        user.Balance,
 		Commission:     user.Commission,
@@ -163,23 +161,6 @@ func (s *UserService) GetTrafficStats(userID uint) (map[string]interface{}, erro
 		"usage_percent": usagePercent,
 		"expired_at":    user.ExpiredAt,
 	}, nil
-}
-
-// ResetSubscribeToken 重置订阅令牌 (UUID)
-func (s *UserService) ResetSubscribeToken(userID uint) (string, error) {
-	user, err := s.userRepo.GetByID(userID)
-	if err != nil {
-		return "", errors.New("user not found")
-	}
-
-	// 生成新 UUID
-	user.UUID = utils.GenerateUUID()
-
-	if err := s.userRepo.Update(user); err != nil {
-		return "", err
-	}
-
-	return user.UUID, nil
 }
 
 // ==================== 管理员方法 ====================

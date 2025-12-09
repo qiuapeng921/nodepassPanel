@@ -1,312 +1,201 @@
 import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-    CreditCard,
-    Ticket,
-    Wallet,
-    Check,
-    Loader2,
-    AlertCircle
-} from 'lucide-react';
-import api from '../../lib/api';
-import { useToast } from '../../components/ui/Toast';
-import PaymentModal from '../../components/biz/PaymentModal';
+import { motion } from 'framer-motion';
+import { CreditCard, Wallet, ArrowRight } from 'lucide-react';
 
-interface UserProfile {
-    id: number;
-    balance: number;
-}
-
-// 充值页面
 export default function UserRechargePage() {
-    const [rechargeCode, setRechargeCode] = useState('');
-    const [successAmount, setSuccessAmount] = useState<number | null>(null);
-    const [error, setError] = useState('');
-
-    // Online Recharge State
-    const [selectedAmount, setSelectedAmount] = useState<number>(0);
+    const [amount, setAmount] = useState('');
     const [customAmount, setCustomAmount] = useState('');
-    const [isCustom, setIsCustom] = useState(false);
-    const [showPayModal, setShowPayModal] = useState(false);
-    const [createdOrder, setCreatedOrder] = useState<{ order_no: string; amount: number } | null>(null);
+    const [loading, setLoading] = useState(false);
 
-    const queryClient = useQueryClient();
-    const toast = useToast();
+    // 预设金额选项
+    const presetAmounts = [10, 20, 50, 100, 200, 500];
 
-    // 获取用户信息
-    const { data: profileData, isLoading: loadingProfile } = useQuery<{ data: UserProfile }>({
-        queryKey: ['user-profile'],
-        queryFn: () => api.get('/user/profile').then(res => res.data),
-    });
+    const handleAmountSelect = (value: number) => {
+        setAmount(value.toString());
+        setCustomAmount('');
+    };
 
-    // 卡密充值
-    const rechargeMutation = useMutation({
-        mutationFn: (code: string) =>
-            api.post('/user/recharge', { code }),
-        onSuccess: (res) => {
-            const amount = res.data?.data?.amount || 0;
-            setSuccessAmount(amount);
-            setRechargeCode('');
-            setError('');
-            queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-            toast.success(`充值成功！已到账 ¥${amount.toFixed(2)}`);
-            setTimeout(() => setSuccessAmount(null), 5000);
-        },
-        onError: (err: any) => {
-            setError(err.response?.data?.message || '充值失败');
-            toast.error(err.response?.data?.message || '充值失败');
-            setSuccessAmount(null);
-        },
-    });
+    const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setCustomAmount(value);
+        setAmount(value);
+    };
 
-    // 在线充值创建订单
-    const createOrderMutation = useMutation({
-        mutationFn: (amount: number) => api.post('/user/recharge/online', { amount }),
-        onSuccess: (res) => {
-            const data = res.data.data;
-            setCreatedOrder({
-                order_no: data.order_no,
-                amount: data.amount,
+    const handleOnlineRecharge = async () => {
+        const finalAmount = parseFloat(amount);
+        if (!finalAmount || finalAmount <= 0) {
+            alert('请输入有效的充值金额');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            // TODO: 调用在线充值API
+            const response = await fetch('/api/v1/user/recharge/online', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify({ amount: finalAmount }),
             });
-            setShowPayModal(true);
-        },
-        onError: (err: any) => {
-            toast.error(err.response?.data?.message || '创建订单失败');
-        }
-    });
 
-    const balance = profileData?.data?.balance || 0;
-
-    const handleRechargeCode = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!rechargeCode.trim()) {
-            setError('请输入充值卡密');
-            return;
-        }
-        setError('');
-        rechargeMutation.mutate(rechargeCode.trim());
-    };
-
-    const handleOnlineRecharge = () => {
-        let amount = selectedAmount;
-        if (isCustom) {
-            amount = parseFloat(customAmount);
-            if (isNaN(amount) || amount <= 0) {
-                toast.error('请输入有效的金额');
-                return;
+            const data = await response.json();
+            if (data.code === 0) {
+                alert('充值订单创建成功，即将跳转到支付页面');
+                // TODO: 跳转到支付页面或处理支付逻辑
+            } else {
+                alert(data.message || '充值失败');
             }
+        } catch (error) {
+            console.error('充值失败:', error);
+            alert('充值失败，请稍后重试');
+        } finally {
+            setLoading(false);
         }
-        if (amount <= 0) {
-            toast.error('请选择或输入充值金额');
-            return;
-        }
-        createOrderMutation.mutate(amount);
     };
-
-    const amounts = [10, 20, 50, 100, 200, 500];
 
     return (
-        <div className="space-y-6">
-            {/* 页面标题 */}
-            <div>
-                <h1 className="text-2xl font-bold text-slate-900">账户充值</h1>
-                <p className="text-slate-500 mt-1">充值余额购买套餐</p>
+        <div className="p-6 max-w-4xl mx-auto">
+            <div className="mb-8">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    账户充值
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400">
+                    为您的账户充值余额，支持在线支付
+                </p>
             </div>
 
-            {/* 当前余额 */}
-            <div className="bg-gradient-to-r from-primary/10 to-purple-600/10 border border-primary/20 rounded-xl p-6">
-                <div className="flex items-center gap-4">
-                    <div className="p-3 bg-white/50 rounded-xl shadow-sm">
-                        <Wallet className="w-8 h-8 text-primary" />
+            {/* 在线充值卡片 */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
+            >
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+                    <div className="flex items-center gap-3 mb-3">
+                        <CreditCard className="w-8 h-8" />
+                        <h2 className="text-2xl font-bold">在线充值</h2>
                     </div>
-                    <div>
-                        <p className="text-sm text-slate-600">当前余额</p>
-                        <p className="text-3xl font-bold text-slate-900">
-                            ¥{loadingProfile ? '...' : balance.toFixed(2)}
-                        </p>
-                    </div>
+                    <p className="text-blue-100">
+                        支持支付宝、微信支付等多种支付方式
+                    </p>
                 </div>
-            </div>
 
-            {/* 充值方式 */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* 在线支付 */}
-                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm order-2 lg:order-1">
-                    <div className="px-6 py-4 border-b border-slate-100">
-                        <div className="flex items-center gap-3">
-                            <CreditCard className="w-5 h-5 text-blue-500" />
-                            <h2 className="text-lg font-semibold text-slate-900">在线支付</h2>
-                        </div>
-                    </div>
-
-                    <div className="p-6">
-                        <div className="grid grid-cols-3 gap-3 mb-4">
-                            {amounts.map((amount) => (
-                                <button
-                                    key={amount}
-                                    onClick={() => {
-                                        setSelectedAmount(amount);
-                                        setIsCustom(false);
-                                        setCustomAmount('');
-                                    }}
-                                    className={`py-3 border rounded-lg text-center transition ${!isCustom && selectedAmount === amount
-                                            ? 'bg-blue-50 border-blue-500 text-blue-600 font-bold'
-                                            : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300'
-                                        }`}
+                <div className="p-6 space-y-6">
+                    {/* 预设金额选择 */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                            选择充值金额
+                        </label>
+                        <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+                            {presetAmounts.map((value) => (
+                                <motion.button
+                                    key={value}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => handleAmountSelect(value)}
+                                    className={`
+                                        px-4 py-3 rounded-xl font-semibold transition-all
+                                        ${amount === value.toString() && !customAmount
+                                            ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/50'
+                                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                        }
+                                    `}
                                 >
-                                    ¥{amount}
-                                </button>
+                                    ¥{value}
+                                </motion.button>
                             ))}
                         </div>
-
-                        <div className="mb-6">
-                            <div
-                                className={`flex items-center px-4 py-3 border rounded-lg transition ${isCustom ? 'border-blue-500 ring-1 ring-blue-500/20' : 'border-slate-200 hover:border-slate-300'
-                                    }`}
-                                onClick={() => setIsCustom(true)}
-                            >
-                                <span className="text-slate-500 mr-2">¥</span>
-                                <input
-                                    type="number"
-                                    placeholder="自定义金额"
-                                    className="w-full bg-transparent outline-none text-slate-900 placeholder-slate-400"
-                                    value={customAmount}
-                                    onChange={(e) => {
-                                        setCustomAmount(e.target.value);
-                                        setIsCustom(true);
-                                        setSelectedAmount(0);
-                                    }}
-                                    onFocus={() => {
-                                        setIsCustom(true);
-                                        setSelectedAmount(0);
-                                    }}
-                                />
-                            </div>
-                        </div>
-
-                        <button
-                            onClick={handleOnlineRecharge}
-                            disabled={createOrderMutation.isPending || (!selectedAmount && !customAmount)}
-                            className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-blue-500/20"
-                        >
-                            {createOrderMutation.isPending ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                    <span>处理中...</span>
-                                </>
-                            ) : (
-                                <>
-                                    <CreditCard className="w-4 h-4" />
-                                    <span>立即支付</span>
-                                </>
-                            )}
-                        </button>
-                    </div>
-                </div>
-
-                {/* 卡密充值 */}
-                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm order-1 lg:order-2">
-                    <div className="px-6 py-4 border-b border-slate-100">
-                        <div className="flex items-center gap-3">
-                            <Ticket className="w-5 h-5 text-green-500" />
-                            <h2 className="text-lg font-semibold text-slate-900">卡密充值</h2>
-                        </div>
                     </div>
 
-                    <form onSubmit={handleRechargeCode} className="p-6 space-y-4">
-                        {/* 成功提示 */}
-                        {successAmount !== null && (
-                            <div className="flex items-center gap-2 px-4 py-3 bg-green-50 border border-green-200 rounded-lg text-green-600">
-                                <Check className="w-4 h-4" />
-                                <span>充值成功！已到账 ¥{successAmount.toFixed(2)}</span>
-                            </div>
-                        )}
-
-                        {/* 错误提示 */}
-                        {error && (
-                            <div className="flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-red-600">
-                                <AlertCircle className="w-4 h-4" />
-                                <span>{error}</span>
-                            </div>
-                        )}
-
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                充值卡密
-                            </label>
+                    {/* 自定义金额输入 */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            或输入自定义金额
+                        </label>
+                        <div className="relative">
+                            <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
-                                type="text"
-                                value={rechargeCode}
-                                onChange={(e) => setRechargeCode(e.target.value)}
-                                placeholder="请输入充值卡密"
-                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-green-500 font-mono placeholder-slate-400"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                value={customAmount}
+                                onChange={handleCustomAmountChange}
+                                placeholder="请输入充值金额"
+                                className="
+                                    w-full pl-12 pr-4 py-3 
+                                    bg-gray-50 dark:bg-gray-700 
+                                    border border-gray-300 dark:border-gray-600 
+                                    rounded-xl
+                                    text-gray-900 dark:text-white
+                                    placeholder-gray-400 dark:placeholder-gray-500
+                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                    transition-all
+                                "
                             />
                         </div>
+                    </div>
 
-                        <button
-                            type="submit"
-                            disabled={rechargeMutation.isPending}
-                            className="w-full flex items-center justify-center gap-2 py-3 bg-green-600 hover:bg-green-500 text-white rounded-lg transition disabled:opacity-50 shadow-sm shadow-green-500/20"
+                    {/* 充值金额显示 */}
+                    {amount && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800"
                         >
-                            {rechargeMutation.isPending ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                    <span>充值中...</span>
-                                </>
-                            ) : (
-                                <>
-                                    <Ticket className="w-4 h-4" />
-                                    <span>立即充值</span>
-                                </>
-                            )}
-                        </button>
+                            <div className="flex items-center justify-between">
+                                <span className="text-gray-600 dark:text-gray-400">充值金额：</span>
+                                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                    ¥{parseFloat(amount).toFixed(2)}
+                                </span>
+                            </div>
+                        </motion.div>
+                    )}
 
-                        <p className="text-xs text-slate-500 text-center">
-                            请确保卡密正确，充值后将立即到账
-                        </p>
-                    </form>
+                    {/* 充值按钮 */}
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleOnlineRecharge}
+                        disabled={!amount || loading}
+                        className="
+                            w-full py-4 px-6
+                            bg-gradient-to-r from-blue-500 to-purple-600
+                            hover:from-blue-600 hover:to-purple-700
+                            text-white font-bold rounded-xl
+                            shadow-lg shadow-blue-500/50
+                            disabled:opacity-50 disabled:cursor-not-allowed
+                            transition-all
+                            flex items-center justify-center gap-2
+                        "
+                    >
+                        {loading ? (
+                            <>
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                处理中...
+                            </>
+                        ) : (
+                            <>
+                                立即充值
+                                <ArrowRight className="w-5 h-5" />
+                            </>
+                        )}
+                    </motion.button>
+
+                    {/* 充值说明 */}
+                    <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-4 border border-yellow-200 dark:border-yellow-800">
+                        <h3 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+                            温馨提示
+                        </h3>
+                        <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+                            <li>• 充值金额将立即到账，可用于购买套餐</li>
+                            <li>• 支持支付宝、微信等主流支付方式</li>
+                            <li>• 充值遇到问题请联系客服</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-
-            {/* 充值说明 */}
-            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                <h3 className="font-semibold text-slate-900 mb-4">充值说明</h3>
-                <ul className="space-y-2 text-sm text-slate-500">
-                    <li className="flex items-start gap-2">
-                        <span className="text-primary">•</span>
-                        <span>账户余额可用于购买站内任意套餐或服务</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                        <span className="text-primary">•</span>
-                        <span>在线支付支持支付宝、微信等多种支付方式，实时到账</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                        <span className="text-primary">•</span>
-                        <span>卡密充值请确保来源合法，卡密为一次性验证，使用后即失效</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                        <span className="text-primary">•</span>
-                        <span>如遇充值失败或未到账问题，请保留支付凭证并立即联系客服</span>
-                    </li>
-                </ul>
-            </div>
-
-            {/* 支付弹窗 */}
-            {createdOrder && (
-                <PaymentModal
-                    isOpen={showPayModal}
-                    onClose={() => setShowPayModal(false)}
-                    orderNo={createdOrder.order_no}
-                    amount={createdOrder.amount}
-                    balance={balance}
-                    allowBalance={false}
-                    onSuccess={() => {
-                        toast.success('充值成功');
-                        setShowPayModal(false);
-                        queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-                    }}
-                />
-            )}
+            </motion.div>
         </div>
     );
 }

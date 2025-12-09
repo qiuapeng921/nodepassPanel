@@ -10,7 +10,6 @@ import AdminPlansPage from './pages/admin/Plans';
 import AdminOrdersPage from './pages/admin/Orders';
 import AnnouncementsPage from './pages/admin/Announcements';
 import AdminSettingsPage from './pages/admin/Settings';
-import AdminRechargeCodesPage from './pages/admin/RechargeCodes';
 import AdminCouponsPage from './pages/admin/Coupons';
 
 // 用户布局和页面
@@ -47,7 +46,6 @@ function App() {
           <Route path="plans" element={<AdminPlansPage />} />
           <Route path="orders" element={<AdminOrdersPage />} />
           <Route path="announcements" element={<AnnouncementsPage />} />
-          <Route path="recharge-codes" element={<AdminRechargeCodesPage />} />
           <Route path="settings" element={<AdminSettingsPage />} />
           <Route path="coupons" element={<AdminCouponsPage />} />
         </Route>

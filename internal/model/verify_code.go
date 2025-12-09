@@ -16,7 +16,7 @@ type VerifyCode struct {
 }
 
 // TableName 指定表名
-func (VerifyCode) TableName() string {
+func (*VerifyCode) TableName() string {
 	return "verify_codes"
 }
 

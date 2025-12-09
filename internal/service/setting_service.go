@@ -109,9 +109,6 @@ func (s *SettingService) InitDefaultSettings() error {
 		{Key: model.SettingKeyMailUser, Value: "user@example.com", Type: "string", Group: model.SettingGroupMail, Desc: "SMTP 账号"},
 		{Key: model.SettingKeyMailPass, Value: "", Type: "string", Group: model.SettingGroupMail, Desc: "SMTP 密码"},
 		{Key: model.SettingKeyMailFrom, Value: "NyanPass <no-reply@example.com>", Type: "string", Group: model.SettingGroupMail, Desc: "发件人地址"},
-
-		// 订阅设置
-		{Key: model.SettingKeySubscribeDomain, Value: "http://localhost:8081", Type: "string", Group: model.SettingGroupSite, Desc: "订阅域名"},
 	}
 
 	for _, item := range defaults {
